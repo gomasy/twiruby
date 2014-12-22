@@ -13,16 +13,20 @@ module TwiRuby
     OAUTH_VERSION = "1.0"
     OAUTH_SIGNATURE_METHOD = "HMAC-SHA1"
 
-    def generate_signature
-      # TODO
+    def initialize(consumer_key = nil, consumer_secret = nil, access_token = nil, access_token_secret = nil)
+      @consumer_key = consumer_key
+      @consumer_secret = consumer_secret
+      @access_token = access_token
+      @access_token_secret = access_token_secret
     end
 
-    #
-    # @params http_method [String]
-    # @params url [URI, String]
-    # @params oauth_nonce [String]
-    # @params oauth_timestamp [String]
-    # @params body [hash]
+    def generate_signature(http_method, url, oauth_nonce, oauth_timestamp, body = nil)
+      oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body)
+      sign_key = "#{consumer_secret}&#{access_token_secret}"
+
+      return Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
+    end
+
     def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil)
       parameters = ""
       generate_parameters(oauth_nonce, oauth_timestamp).each do |s|
@@ -30,20 +34,34 @@ module TwiRuby
       end
       parameters = parameters[0..parameters.length - 2]
 
-      oauth_signature_base =
-        "#{http_method}&" \
-        "#{url_encode(url)}&" \
-        "#{url_encode(parameters)}"
-      oauth_signature_base << "&#{body}" if body != nil
-      return oauth_signature_base
+      if body != nil
+        request_body = ""
+        body.each do |s|
+          request_body << "#{s[0]}=#{url_encode(s[1])}&"
+        end
+        request_body = "&#{request_body[0..request_body.length - 2]}"
+      end
+
+      return "#{http_method}&" \
+      "#{url_encode(url)}&" \
+      "#{url_encode(
+        "#{parameters}" \
+        "#{request_body}" \
+      )}"
     end
 
-    def generate_header(http_method, url)
-      # TODO
+    def generate_header(http_method, url, body = nil)
       oauth_nonce = SecureRandom.hex
       oauth_timestamp = Time.now.to_i
+      oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body)
+      oauth_signature = url_encode(generate_signature(http_method, url, oauth_nonce, oauth_timestamp, body))
 
-      parameters = generate_parameters(oauth_nonce, oauth_timestamp)
+      parameters = "OAuth "
+      generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature).each do |s|
+        parameters << "#{s[0]}=\"#{s[1]}\", "
+      end
+
+      return parameters[0..parameters.length - 3]
     end
 
     def generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature = nil)
@@ -57,10 +75,6 @@ module TwiRuby
       parameters["oauth_version"] = OAUTH_VERSION
 
       return parameters
-    end
-
-    def to_join(hash, split = nil)
-      hash.map{|s|"#{s[0]}=#{split}#{s[1]}#{split}"}
     end
 
     def has_token
