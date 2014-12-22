@@ -2,7 +2,6 @@ require "securerandom"
 require "openssl"
 require "base64"
 require "erb"
-require "uri"
 
 include ERB::Util
 
@@ -34,8 +33,8 @@ module TwiRuby
       end
       parameters = parameters[0..parameters.length - 2]
 
+      request_body = ""
       if body != nil
-        request_body = ""
         body.each do |s|
           request_body << "#{s[0]}=#{url_encode(s[1])}&"
         end
