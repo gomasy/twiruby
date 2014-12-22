@@ -1,21 +1,19 @@
 require "net/https"
+require "uri"
 
 module TwiRuby
+  BASE_URL = URI("https://api.twitter.com")
+
   class Request < Net::HTTP
+    attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
     attr_writer :user_agent
 
     def request(req, body = nil, &block)
-      self.use_ssl = true
+      oauth = OAuth.new(consumer_key, consumer_secret, access_token, access_token_secret)
+      req["Authorization"] = oauth.generate_header(req.method, "#{TwiRuby::BASE_URL}#{req.path}")
       req["User-Agent"] = user_agent
+      self.use_ssl = true
       super
-    end
-
-    def get_request(path, consumer_key, consumer_secret, token = nil, token_secret = nil)
-      # TODO
-    end
-
-    def post_request(path, consumer_key, consumer_secret, token = nil, token_secret = nil, data = nil)
-      # TODO
     end
 
     def user_agent
