@@ -12,11 +12,8 @@ module TwiRuby
     OAUTH_VERSION = "1.0"
     OAUTH_SIGNATURE_METHOD = "HMAC-SHA1"
 
-    def initialize(consumer_key = nil, consumer_secret = nil, access_token = nil, access_token_secret = nil)
-      @consumer_key = consumer_key
-      @consumer_secret = consumer_secret
-      @access_token = access_token
-      @access_token_secret = access_token_secret
+    def initialize
+      yield(self)
     end
 
     def generate_signature(http_method, url, oauth_nonce, oauth_timestamp, body = nil)
@@ -33,20 +30,15 @@ module TwiRuby
       end
       parameters = parameters[0..parameters.length - 2]
 
-      request_body = ""
-      if body != nil
-        body.each do |s|
-          request_body << "#{s[0]}=#{url_encode(s[1])}&"
-        end
-        request_body = "&#{request_body[0..request_body.length - 2]}"
-      end
-
-      return "#{http_method}&" \
+      oauth_signature_base =
+      "#{http_method}&" \
       "#{url_encode(url)}&" \
       "#{url_encode(
-        "#{parameters}" \
-        "#{request_body}" \
+        "#{parameters}"
       )}"
+      oauth_signature_base << url_encode("&#{body}") if body != nil
+
+      return oauth_signature_base
     end
 
     def generate_header(http_method, url, body = nil)
