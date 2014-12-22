@@ -70,14 +70,10 @@ module TwiRuby
       parameters["oauth_signature"] = oauth_signature if oauth_signature != nil
       parameters["oauth_signature_method"] = OAUTH_SIGNATURE_METHOD
       parameters["oauth_timestamp"] = oauth_timestamp
-      parameters["oauth_token"] = access_token if has_token
+      parameters["oauth_token"] = access_token if access_token != nil
       parameters["oauth_version"] = OAUTH_VERSION
 
       return parameters
-    end
-
-    def has_token
-      !!(access_token && access_token_secret)
     end
   end
 end
