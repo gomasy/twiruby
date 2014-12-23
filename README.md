@@ -1,6 +1,8 @@
 # TwiRuby
+[![Code Climate](https://img.shields.io/codeclimate/github/Gomasy/twiruby.svg?style=flat)](https://codeclimate.com/github/Gomasy/twiruby)
 
-TODO: Write a gem description
+TODO: Write a gem description  
+**[WARNING!!] This gem is in the process of being developed. There may be a destructive change.**
 
 ## Installation
 
