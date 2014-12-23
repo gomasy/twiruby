@@ -2,6 +2,7 @@ require "securerandom"
 require "openssl"
 require "base64"
 require "erb"
+require "uri"
 
 include ERB::Util
 
@@ -29,6 +30,12 @@ module TwiRuby
         parameters << "#{s[0]}=#{s[1]}&"
       end
       parameters = parameters[0..parameters.length - 2]
+
+      if URI::split(url)[7] != nil
+        query_params = URI::split(url)[7]
+        url.gsub!("?#{query_params}", "")
+        parameters = "#{query_params}&#{parameters}"
+      end
 
       oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
       oauth_signature_base << url_encode("&#{body}") if body != nil
