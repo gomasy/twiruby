@@ -1,73 +1,39 @@
-require "securerandom"
-require "openssl"
-require "base64"
-require "erb"
 require "uri"
-
-include ERB::Util
+require "./oauth/utils"
 
 module TwiRuby
   class OAuth
+    include OAuth::Utils
+
     attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
 
-    OAUTH_VERSION = "1.0"
-    OAUTH_SIGNATURE_METHOD = "HMAC-SHA1"
+    BASE_URL = URI("https://api.twitter.com")
+    REQUEST_TOKEN_URL = "/oauth/request_token"
+    ACCESS_TOKEN_URL = "/oauth/access_token"
+    AUTHORIZE_URL = "/oauth/authorize"
 
     def initialize
-      yield(self)
+      yield(self) if block_given?
+
+      @req = Request.new(BASE_URL.host, BASE_URL.port)
     end
 
-    def generate_signature(http_method, url, oauth_nonce, oauth_timestamp, body = nil)
-      oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body)
-      sign_key = "#{consumer_secret}&#{access_token_secret}"
+    def get_request_token
+      @req.consumer_key = consumer_key
+      @req.consumer_secret = consumer_secret
 
-      return Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
+      response = @req.post(REQUEST_TOKEN_URL, nil).body
+      token = Hash[URI::decode_www_form(response)]
+      token["authorize_url"] = "#{BASE_URL}#{AUTHORIZE_URL}?#{response}"
+
+      return token
     end
 
-    def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil)
-      parameters = ""
-      generate_parameters(oauth_nonce, oauth_timestamp).each do |s|
-        parameters << "#{s[0]}=#{s[1]}&"
-      end
-      parameters = parameters[0..parameters.length - 2]
+    def get_access_token(request_token, options = {})
+      @req.access_token = request_token["oauth_token"]
+      @req.access_token_secret = request_token["oauth_token_secret"]
 
-      query_params = URI::split(url)[7]
-      if query_params != nil
-        url = url.gsub("?#{query_params}", "")
-        parameters = "#{query_params}&#{parameters}"
-      end
-
-      oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
-      oauth_signature_base << url_encode("&#{body}") if body != nil
-
-      return oauth_signature_base
-    end
-
-    def generate_header(http_method, url, body = nil)
-      oauth_nonce = SecureRandom.hex
-      oauth_timestamp = Time.now.to_i
-      oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body)
-      oauth_signature = url_encode(generate_signature(http_method, url, oauth_nonce, oauth_timestamp, body))
-
-      parameters = "OAuth "
-      generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature).each do |s|
-        parameters << "#{s[0]}=\"#{s[1]}\", "
-      end
-
-      return parameters[0..parameters.length - 3]
-    end
-
-    def generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature = nil)
-      parameters = {}
-      parameters["oauth_consumer_key"] = consumer_key
-      parameters["oauth_nonce"] = oauth_nonce
-      parameters["oauth_signature"] = oauth_signature if oauth_signature != nil
-      parameters["oauth_signature_method"] = OAUTH_SIGNATURE_METHOD
-      parameters["oauth_timestamp"] = oauth_timestamp
-      parameters["oauth_token"] = access_token if access_token != nil
-      parameters["oauth_version"] = OAUTH_VERSION
-
-      return parameters
+      return Hash[URI::decode_www_form(@req.post(ACCESS_TOKEN_URL, options).body)]
     end
   end
 end

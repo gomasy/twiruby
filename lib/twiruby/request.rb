@@ -10,11 +10,11 @@ module TwiRuby
     attr_writer :user_agent
 
     def initialize(address, port = nil)
-      yield(self)
+      yield(self) if block_given?
       super
     end
 
-    def request(req, body = nil, &block)
+    def request(req, body = nil)
       self.use_ssl = true
 
       oauth = OAuth.new do |config|
@@ -29,13 +29,13 @@ module TwiRuby
       super
     end
 
-    def get(path, initheader = {}, dest = nil, &block)
+    def get(path, initheader = {}, dest = nil)
       request(Get.new(path, initheader))
     end
 
-    def post(path, data, initheader = {}, dest = nil, &block)
-      body = ""
+    def post(path, data, initheader = {}, dest = nil)
       if data != nil
+        body = ""
         data.each do |s|
           body << "#{s[0]}=#{url_encode(s[1])}&"
         end
