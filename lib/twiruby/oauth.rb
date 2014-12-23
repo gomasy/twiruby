@@ -1,5 +1,6 @@
 require "uri"
-require "./oauth/utils"
+
+require "twiruby/oauth/utils"
 
 module TwiRuby
   class OAuth
