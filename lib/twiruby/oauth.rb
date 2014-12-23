@@ -30,10 +30,7 @@ module TwiRuby
       end
       parameters = parameters[0..parameters.length - 2]
 
-      oauth_signature_base =
-        "#{http_method}&" \
-        "#{url_encode(url)}&" \
-        "#{url_encode(parameters)}"
+      oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
       oauth_signature_base << url_encode("&#{body}") if body != nil
 
       return oauth_signature_base
