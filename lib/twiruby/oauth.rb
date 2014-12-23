@@ -33,7 +33,7 @@ module TwiRuby
 
       query_params = URI::split(url)[7]
       if query_params != nil
-        url.gsub!("?#{query_params}", "")
+        url = url.gsub("?#{query_params}", "")
         parameters = "#{query_params}&#{parameters}"
       end
 
