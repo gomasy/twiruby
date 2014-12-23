@@ -5,8 +5,6 @@ require "uri"
 include ERB::Util
 
 module TwiRuby
-  BASE_URL = URI("https://api.twitter.com")
-
   class Request < Net::HTTP
     attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
     attr_writer :user_agent
@@ -26,7 +24,7 @@ module TwiRuby
         config.access_token_secret = access_token_secret
       end
 
-      req["Authorization"] = oauth.generate_header(req.method, "#{TwiRuby::BASE_URL}#{req.path}", body)
+      req["Authorization"] = oauth.generate_header(req.method, "https://#{self.address}#{req.path}", body)
       req["User-Agent"] = user_agent
       super
     end
