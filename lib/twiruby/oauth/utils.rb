@@ -44,8 +44,6 @@ module TwiRuby
         oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body)
         oauth_signature = url_encode(generate_signature(http_method, url, oauth_nonce, oauth_timestamp, body))
 
-        puts oauth_signature_base
-
         parameters = "OAuth "
         generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature).each do |s|
           parameters << "#{s[0]}=\"#{s[1]}\", "
