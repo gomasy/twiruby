@@ -17,16 +17,22 @@ module TwiRuby
     end
 
     def request(req, body = nil, &block)
+      self.use_ssl = true
+
       oauth = OAuth.new do |config|
         config.consumer_key = consumer_key
         config.consumer_secret = consumer_secret
         config.access_token = access_token
         config.access_token_secret = access_token_secret
       end
+
       req["Authorization"] = oauth.generate_header(req.method, "#{TwiRuby::BASE_URL}#{req.path}", body)
       req["User-Agent"] = user_agent
-      self.use_ssl = true
       super
+    end
+
+    def get(path, initheader = {}, dest = nil, &block)
+      request(Get.new(path, initheader))
     end
 
     def post(path, data, initheader = {}, dest = nil, &block)
@@ -38,7 +44,7 @@ module TwiRuby
         body = body[0..body.length - 2]
       end
 
-      send_entity(path, body, initheader, dest, Post, &block)
+      request(Post.new(path, initheader), body)
     end
 
     def user_agent
