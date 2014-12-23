@@ -16,7 +16,10 @@ module TwiRuby
     def initialize
       yield(self) if block_given?
 
-      @req = Request.new(BASE_URL.host, BASE_URL.port)
+      @req = Request.new(BASE_URL.host, BASE_URL.port) do |config|
+        config.consumer_key = consumer_key
+        config.consumer_secret = consumer_secret
+      end
     end
 
     def get_request_token
