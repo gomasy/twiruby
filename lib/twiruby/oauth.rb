@@ -44,7 +44,7 @@ module TwiRuby
       begin
         response = @req.post(path, options)
 
-        if response.body.include?("oauth_token")
+        if response.code == "200"
           yield(response) if block_given?
         elsif response.body.include?("<?xml")
           require "rexml/document"
