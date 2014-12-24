@@ -27,29 +27,29 @@ module TwiRuby
         @req.consumer_secret = consumer_secret
       end
 
-      begin
-        response = @req.post(REQUEST_TOKEN_URL, nil)
+      get_response("/oauth/request_token") do |res|
+        token = Hash[URI::decode_www_form(res.body)]
+        token["authorize_url"] = "#{BASE_URL}/oauth/authorize?#{res.body}"
 
-        if response.body.include?("oauth_token")
-          token = Hash[URI::decode_www_form(response.body)]
-          token["authorize_url"] = "#{BASE_URL}#{AUTHORIZE_URL}?#{response.body}"
-
-          return token
-        else
-          fail(Error.raise(response.code), response.body)
-        end
+        return token
       end
     end
 
-    def get_access_token(request_token, options = {})
+    def get_access_token(request_token, options = nil)
       @req.access_token = request_token["oauth_token"]
       @req.access_token_secret = request_token["oauth_token_secret"]
 
+      get_response("/oauth/access_token", options) do |res|
+        return Hash[URI::decode_www_form(res.body)]
+      end
+    end
+
+    def get_response(path, options = nil)
       begin
-        response = @req.post(ACCESS_TOKEN_URL, options)
+        response = @req.post(path, options)
 
         if response.body.include?("oauth_token")
-          return Hash[URI::decode_www_form(response.body)]
+          yield(response) if block_given?
         elsif response.body.include?("<?xml")
           require "rexml/document"
           xml = REXML::Document.new(response.body)
