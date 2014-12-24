@@ -12,14 +12,11 @@ module TwiRuby
       OAUTH_VERSION = "1.0"
       OAUTH_SIGNATURE_METHOD = "HMAC-SHA1"
 
-      def generate_signature(http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = nil)
-        oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body)
-        sign_key = "#{consumer_secret}&#{access_token_secret}"
-
-        return Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
+      def generate_signature(oauth_signature_base, sign_key)
+        Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
       end
 
-      def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = nil)
+      def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil)
         parameters = ""
         generate_parameters(oauth_nonce, oauth_timestamp).each do |s|
           parameters << "#{s[0]}=#{s[1]}&"
@@ -32,25 +29,19 @@ module TwiRuby
           parameters = "#{query_params}&#{parameters}"
         end
 
-        if options != nil
-          body = "" if body != nil
-          options.each do |s|
-            body << "&#{s[0]}=#{s[1]}"
-          end
-          body = body[0..body.length - 2]
-        end
-
         oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
         oauth_signature_base << url_encode("&#{body}") if body != nil
 
         return oauth_signature_base
       end
 
-      def generate_header(http_method, url, body = nil, options = nil)
+      def generate_header(http_method, url, body = nil)
         oauth_nonce = SecureRandom.hex
         oauth_timestamp = Time.now.to_i
         oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body)
-        oauth_signature = url_encode(generate_signature(http_method, url, oauth_nonce, oauth_timestamp, body))
+
+        sign_key = "#{consumer_secret}&#{access_token_secret}"
+        oauth_signature = url_encode(generate_signature(oauth_signature_base, sign_key))
 
         parameters = "OAuth "
         generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature).each do |s|
