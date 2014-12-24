@@ -3,5 +3,5 @@ rvm:
   - 2.0
   - 2.1
   - ruby-head
-env:
-  - CODECLIMATE_REPO_TOKEN=2ac612c2ae9b614085b300867fdcbe6f092aa89e48dddd117c6c5a4b20d2
+script:
+  - CODECLIMATE_REPO_TOKEN=2ac612c2ae9b614085b300867fdcbe6f092aa89e48dddd117c6c5a4b20d2 bundle exec rake
