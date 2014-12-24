@@ -4,13 +4,9 @@ require "uri"
 module TwiRuby
   class OAuth
     include OAuth::Utils
-
     attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
 
     BASE_URL = URI("https://api.twitter.com")
-    REQUEST_TOKEN_URL = "/oauth/request_token"
-    ACCESS_TOKEN_URL = "/oauth/access_token"
-    AUTHORIZE_URL = "/oauth/authorize"
 
     def initialize
       yield(self) if block_given?
