@@ -1,5 +1,7 @@
 # TwiRuby
+[![Build Status](https://img.shields.io/travis/Gomasy/twiruby.svg?style=flat)](https://travis-ci.org/Gomasy/twiruby)
 [![Code Climate](https://img.shields.io/codeclimate/github/Gomasy/twiruby.svg?style=flat)](https://codeclimate.com/github/Gomasy/twiruby)
+[![Test Coverage](https://img.shields.io/codeclimate/coverage/github/Gomasy/twiruby.svg?style=flat)](https://codeclimate.com/github/Gomasy/twiruby)
 
 TODO: Write a gem description  
 **[WARNING!!] This gem is in the process of being developed. There may be a destructive change.**

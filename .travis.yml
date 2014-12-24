@@ -1,0 +1,8 @@
+language: ruby
+rvm:
+  - 2.0
+  - 2.1
+  - ruby-head
+script:
+  - rake build
+  - gem install pkg/twiruby-*.gem
