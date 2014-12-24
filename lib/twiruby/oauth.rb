@@ -9,6 +9,11 @@ module TwiRuby
     BASE_URL = URI("https://api.twitter.com")
 
     def initialize(options = {})
+      @consumer_key = nil
+      @consumer_secret = nil
+      @access_token = nil
+      @access_token_secret = nil
+
       options.each do |key, value|
         instance_variable_set("@#{key}", value)
       end
@@ -56,11 +61,11 @@ module TwiRuby
     end
 
     def has_consumer_token?
-      !(consumer_key != "" && consumer_secret != "")
+      !!(consumer_key != nil && consumer_secret != nil)
     end
 
     def has_oauth_token?
-      !(access_token != "" && access_token_secret != "")
+      !!(access_token != nil && access_token_secret != nil)
     end
   end
 end
