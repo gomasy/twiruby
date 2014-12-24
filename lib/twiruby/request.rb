@@ -5,35 +5,39 @@ require "uri"
 include ERB::Util
 
 module TwiRuby
-  class Request < Net::HTTP
+  class Request
     attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
     attr_writer :user_agent
 
-    def initialize(address, port = nil)
-      yield(self) if block_given?
-      super
+    def initialize(oauth)
+      @oauth = oauth
+
+      @https = Net::HTTP.new(OAuth::BASE_URL.host, OAuth::BASE_URL.port)
+      @https.use_ssl = true
     end
 
     def request(req, body = nil)
-      self.use_ssl = true
-
-      oauth = OAuth.new do |config|
-        config.consumer_key = consumer_key
-        config.consumer_secret = consumer_secret
-        config.access_token = access_token
-        config.access_token_secret = access_token_secret
+      if !@oauth.has_consumer_token?
+        @oauth.consumer_key = consumer_key
+        @oauth.consumer_secret = consumer_secret
       end
 
-      req["Authorization"] = oauth.generate_header(req.method, "https://#{self.address}#{req.path}", body)
+      if !@oauth.has_oauth_token?
+        @oauth.access_token = access_token
+        @oauth.access_token_secret = access_token_secret
+      end
+
+      req["Authorization"] = @oauth.generate_header(req.method, "#{OAuth::BASE_URL}#{req.path}", body)
       req["User-Agent"] = user_agent
-      super
+
+      @https.request(req, body)
     end
 
-    def get(path, initheader = {}, dest = nil)
-      request(Get.new(path, initheader))
+    def get(path, initheader = {})
+      request(Net::HTTP::Get.new(path, initheader))
     end
 
-    def post(path, data, initheader = {}, dest = nil)
+    def post(path, data, initheader = {})
       if data != nil
         body = ""
         data.each do |s|
@@ -42,7 +46,7 @@ module TwiRuby
         body = body[0..body.length - 2]
       end
 
-      request(Post.new(path, initheader), body)
+      request(Net::HTTP::Post.new(path, initheader), body)
     end
 
     def user_agent

@@ -11,17 +11,12 @@ module TwiRuby
     def initialize
       yield(self) if block_given?
 
-      @req = Request.new(BASE_URL.host, BASE_URL.port) do |config|
-        config.consumer_key = consumer_key
-        config.consumer_secret = consumer_secret
-      end
+      @req = Request.new(self)
     end
 
     def get_request_token
-      if !has_consumer_token?
-        @req.consumer_key = consumer_key
-        @req.consumer_secret = consumer_secret
-      end
+      @req.consumer_key = consumer_key
+      @req.consumer_secret = consumer_secret
 
       get_response("/oauth/request_token") do |res|
         token = Hash[URI::decode_www_form(res.body)]
