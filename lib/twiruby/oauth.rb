@@ -1,6 +1,5 @@
-require "uri"
-
 require "twiruby/oauth/utils"
+require "uri"
 
 module TwiRuby
   class OAuth
@@ -23,21 +22,51 @@ module TwiRuby
     end
 
     def get_request_token
-      @req.consumer_key = consumer_key
-      @req.consumer_secret = consumer_secret
+      if !has_consumer_token?
+        @req.consumer_key = consumer_key
+        @req.consumer_secret = consumer_secret
+      end
 
-      response = @req.post(REQUEST_TOKEN_URL, nil).body
-      token = Hash[URI::decode_www_form(response)]
-      token["authorize_url"] = "#{BASE_URL}#{AUTHORIZE_URL}?#{response}"
+      begin
+        response = @req.post(REQUEST_TOKEN_URL, nil)
 
-      return token
+        if response.body.include?("oauth_token")
+          token = Hash[URI::decode_www_form(response.body)]
+          token["authorize_url"] = "#{BASE_URL}#{AUTHORIZE_URL}?#{response.body}"
+
+          return token
+        else
+          fail(Error.raise(response.code), response.body)
+        end
+      end
     end
 
     def get_access_token(request_token, options = {})
       @req.access_token = request_token["oauth_token"]
       @req.access_token_secret = request_token["oauth_token_secret"]
 
-      return Hash[URI::decode_www_form(@req.post(ACCESS_TOKEN_URL, options).body)]
+      begin
+        response = @req.post(ACCESS_TOKEN_URL, options)
+
+        if response.body.include?("oauth_token")
+          return Hash[URI::decode_www_form(response.body)]
+        elsif response.body.include?("<?xml")
+          require "rexml/document"
+          xml = REXML::Document.new(response.body)
+
+          fail(Error.raise(response.code), xml.elements["/hash/error"].text)
+        else
+          fail(Error.raise(response.code), response.body)
+        end
+      end
+    end
+
+    def has_consumer_token?
+      !(consumer_key != "" && consumer_secret != "")
+    end
+
+    def has_oauth_token?
+      !(access_token != "" && access_token_secret != "")
     end
   end
 end
