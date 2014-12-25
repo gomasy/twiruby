@@ -12,8 +12,9 @@ module TwiRuby
     def initialize(oauth)
       @oauth = oauth
 
-      @https = Net::HTTP.new(OAuth::BASE_URL.host, OAuth::BASE_URL.port)
+      @https = Net::HTTP.new(@oauth.base_url.host, @oauth.base_url.port)
       @https.use_ssl = true
+      @https.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
 
     def request(req, body = nil)
@@ -27,7 +28,7 @@ module TwiRuby
         @oauth.access_token_secret = access_token_secret
       end
 
-      req["Authorization"] = @oauth.generate_header(req.method, "#{OAuth::BASE_URL}#{req.path}", body)
+      req["Authorization"] = @oauth.generate_header(req.method, "#{@oauth.base_url}#{req.path}", body)
       req["User-Agent"] = user_agent
 
       @https.request(req, body)

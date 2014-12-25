@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe TwiRuby::Request do
-  let(:oauth) { TwiRuby::OAuth.new(consumer_key: "CK", consumer_secret: "CS", access_token: "AT", access_token_secret: "ATS") }
+  let(:oauth) { TwiRuby::OAuth.new(consumer_key: "CK", consumer_secret: "CS", access_token: "AT", access_token_secret: "ATS", base_url: URI("https://localhost:8080")) }
   let(:instance) { TwiRuby::Request.new(oauth) }
 
   describe ".new" do
@@ -13,18 +13,18 @@ describe TwiRuby::Request do
   end
 
   describe "#get" do
-    subject { instance.get("/") }
+    subject { instance.get("/get") }
 
-    it "should return 404" do
-      is_expected.to be_a Net::HTTPNotFound
+    it "should return 200" do
+      is_expected.to be_a Net::HTTPOK
     end
   end
 
   describe "#post" do
-    subject { instance.post("/?query=content", "body" => "content") }
+    subject { instance.post("/post", "body" => "content") }
 
-    it "should return 404" do
-      is_expected.to be_a Net::HTTPNotFound
+    it "should return 200" do
+      is_expected.to be_a Net::HTTPOK
     end
   end
 

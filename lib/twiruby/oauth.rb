@@ -4,9 +4,7 @@ require "uri"
 module TwiRuby
   class OAuth
     include OAuth::Utils
-    attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
-
-    BASE_URL = URI("https://api.twitter.com")
+    attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret, :base_url
 
     def initialize(options = {})
       @consumer_key = nil
@@ -28,7 +26,7 @@ module TwiRuby
 
       get_response("/oauth/request_token") do |res|
         token = Hash[URI::decode_www_form(res.body)]
-        token["authorize_url"] = "#{BASE_URL}/oauth/authorize?#{res.body}"
+        token["authorize_url"] = "#{base_url}/oauth/authorize?#{res.body}"
 
         return token
       end
@@ -58,6 +56,10 @@ module TwiRuby
           fail(Error.raise(response.code), response.body)
         end
       end
+    end
+
+    def base_url
+      @base_url ||= URI("https://api.twitter.com")
     end
 
     def has_consumer_token?
