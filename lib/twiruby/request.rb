@@ -1,6 +1,5 @@
 require "net/https"
 require "erb"
-require "uri"
 
 include ERB::Util
 
