@@ -1,3 +1,6 @@
+require "rexml/document"
+require "json"
+
 module TwiRuby
   class Error < StandardError
     # HTTP status code 304
@@ -60,8 +63,25 @@ module TwiRuby
     }
 
     class << self
-      def raise(code)
+      def type(code)
         ERRORS[code]
+      end
+
+      def parse_xml(body)
+        xml = REXML::Document.new(body)
+
+        if xml.elements["/hash/error"] != nil
+          return [ nil, xml.elements["/hash/error"].text ]
+        elsif xml.elements["/errors"] != nil
+          element = xml.elements["/errors"]
+          return [ element.attributes["code"], element.text ]
+        end
+      end
+
+      def parse_json(body)
+        error = JSON.parse(body).errors[0]
+
+        return [ error.code, error.message ]
       end
     end
   end

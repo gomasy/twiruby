@@ -40,19 +40,14 @@ module TwiRuby
     end
 
     def get_response(req, path, options = nil)
-      begin
-        response = req.post(path, options)
+      response = req.post(path, options)
 
-        if response.code.to_i == 200
-          yield(response) if block_given?
-        elsif response.body.include?("<?xml")
-          require "rexml/document"
-          xml = REXML::Document.new(response.body)
-
-          fail(Error.raise(response.code.to_i), xml.elements["/hash/error"].text)
-        else
-          fail(Error.raise(response.code.to_i), response.body)
-        end
+      if response.code.to_i == 200
+        yield(response) if block_given?
+      elsif response.body.include?("<?xml")
+        fail(Error.type(response.code.to_i), Error.parse_xml(response.body)[1])
+      else
+        fail(Error.type(response.code.to_i), response.body)
       end
     end
 
