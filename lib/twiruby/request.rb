@@ -5,7 +5,6 @@ include ERB::Util
 
 module TwiRuby
   class Request
-    attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
     attr_writer :user_agent
 
     def initialize(oauth)
@@ -16,37 +15,32 @@ module TwiRuby
       @https.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
 
-    def request(req, body = nil)
-      if !@oauth.has_consumer_token?
-        @oauth.consumer_key = consumer_key
-        @oauth.consumer_secret = consumer_secret
-      end
+    def request(method, path, body = nil, options = nil)
+      header = {
+        "Authorization" => @oauth.generate_header(method, "#{@oauth.base_url}#{path}", body, options),
+        "User-Agent" => user_agent
+      }
+      path = "#{path}?#{to_query(options)}" if options != nil
 
-      if !@oauth.has_oauth_token?
-        @oauth.access_token = access_token
-        @oauth.access_token_secret = access_token_secret
-      end
-
-      req["Authorization"] = @oauth.generate_header(req.method, "#{@oauth.base_url}#{req.path}", body)
-      req["User-Agent"] = user_agent
-
-      @https.request(req, body)
+      @https.send_request(method, path, body, header)
     end
 
-    def get(path, initheader = {})
-      request(Net::HTTP::Get.new(path, initheader))
+    def get(path, options = nil)
+      request("GET", path, nil, options)
     end
 
-    def post(path, data, initheader = {})
-      if data != nil
-        body = ""
-        data.each do |s|
-          body << "#{s[0]}=#{url_encode(s[1])}&"
-        end
-        body = body[0..body.length - 2]
+    def post(path, data = nil, options = nil)
+      data = data != nil ? to_query(data) : nil
+      request("POST", path, data, options)
+    end
+
+    def to_query(hash)
+      str = ""
+      hash.each do |s|
+        str << "#{s[0]}=#{url_encode(s[1])}&"
       end
 
-      request(Net::HTTP::Post.new(path, initheader), body)
+      return str[0..str.length - 2]
     end
 
     def user_agent

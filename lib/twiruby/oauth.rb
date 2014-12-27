@@ -16,15 +16,13 @@ module TwiRuby
         instance_variable_set("@#{key}", value)
       end
       yield(self) if block_given?
-
-      @req = Request.new(self)
     end
 
     def get_request_token
-      @req.consumer_key = consumer_key
-      @req.consumer_secret = consumer_secret
+      @consumer_key = consumer_key
+      @consumer_secret = consumer_secret
 
-      get_response("/oauth/request_token") do |res|
+      get_response(Request.new(self), "/oauth/request_token") do |res|
         token = Hash[URI::decode_www_form(res.body)]
         token["authorize_url"] = "#{base_url}/oauth/authorize?#{res.body}"
 
@@ -33,27 +31,27 @@ module TwiRuby
     end
 
     def get_access_token(request_token, options = nil)
-      @req.access_token = request_token["oauth_token"]
-      @req.access_token_secret = request_token["oauth_token_secret"]
+      @access_token = request_token["oauth_token"]
+      @access_token_secret = request_token["oauth_token_secret"]
 
-      get_response("/oauth/access_token", options) do |res|
+      get_response(Request.new(self), "/oauth/access_token", options) do |res|
         return Hash[URI::decode_www_form(res.body)]
       end
     end
 
-    def get_response(path, options = nil)
+    def get_response(req, path, options = nil)
       begin
-        response = @req.post(path, options)
+        response = req.post(path, options)
 
-        if response.code == "200"
+        if response.code.to_i == 200
           yield(response) if block_given?
         elsif response.body.include?("<?xml")
           require "rexml/document"
           xml = REXML::Document.new(response.body)
 
-          fail(Error.raise(response.code), xml.elements["/hash/error"].text)
+          fail(Error.raise(response.code.to_i), xml.elements["/hash/error"].text)
         else
-          fail(Error.raise(response.code), response.body)
+          fail(Error.raise(response.code.to_i), response.body)
         end
       end
     end

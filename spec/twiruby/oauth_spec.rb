@@ -22,13 +22,13 @@ describe TwiRuby::OAuth do
   describe "#get_response" do
     it "raise TwiRuby::Error::NotFound" do
       expect do
-        instance.get_response("/404?query=content")
+        instance.get_response(TwiRuby::Request.new(instance), "/404?query=content")
       end.to raise_error TwiRuby::Error::NotFound
     end
 
     it "raise TwiRuby::Error::Unauthorized" do
       expect do
-        instance.get_response("/xml")
+        instance.get_response(TwiRuby::Request.new(instance), "/xml")
       end.to raise_error TwiRuby::Error::Unauthorized
     end
   end

@@ -16,18 +16,12 @@ module TwiRuby
         Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
       end
 
-      def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil)
+      def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = nil)
         parameters = ""
-        generate_parameters(oauth_nonce, oauth_timestamp).each do |s|
+        generate_parameters(oauth_nonce, oauth_timestamp, nil, options).each do |s|
           parameters << "#{s[0]}=#{s[1]}&"
         end
         parameters = parameters[0..parameters.length - 2]
-
-        query_params = URI::split(url)[7]
-        if query_params != nil
-          url = url.gsub("?#{query_params}", "")
-          parameters = "#{query_params}&#{parameters}"
-        end
 
         oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
         oauth_signature_base << url_encode("&#{body}") if body != nil
@@ -35,10 +29,10 @@ module TwiRuby
         return oauth_signature_base
       end
 
-      def generate_header(http_method, url, body = nil)
+      def generate_header(http_method, url, body = nil, options = nil)
         oauth_nonce = SecureRandom.hex
         oauth_timestamp = Time.now.to_i
-        oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body)
+        oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body, options)
 
         sign_key = "#{consumer_secret}&#{access_token_secret}"
         oauth_signature = url_encode(generate_signature(oauth_signature_base, sign_key))
@@ -51,7 +45,7 @@ module TwiRuby
         return parameters[0..parameters.length - 3]
       end
 
-      def generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature = nil)
+      def generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature = nil, options = nil)
         parameters = {}
         parameters["oauth_consumer_key"] = consumer_key
         parameters["oauth_nonce"] = oauth_nonce
@@ -60,8 +54,9 @@ module TwiRuby
         parameters["oauth_timestamp"] = oauth_timestamp
         parameters["oauth_token"] = access_token if access_token != nil
         parameters["oauth_version"] = OAUTH_VERSION
+        parameters.update(options) if options != nil
 
-        return parameters
+        return Hash[parameters.sort]
       end
     end
   end
