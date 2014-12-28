@@ -1,69 +1,51 @@
 require "spec_helper"
 
 describe TwiRuby::OAuth do
-  let(:instance) { TwiRuby::OAuth.new(base_url: URI("https://localhost:8080")) }
+  let(:instance) { TwiRuby::OAuth.new(consumer_key: "CK", consumer_secret: "CS") }
+  let(:body) { "oauth_token=AT&oauth_token_secret=ATS" }
 
   describe "#get_request_token" do
-    subject { instance.get_request_token }
+    before do
+      stub_post("/oauth/request_token").to_return(:status => 200, :body => body)
+      @token = instance.get_request_token
+    end
 
-    it "should return a Hash" do
-      is_expected.to be_a Hash
+    it "return true if consumer tokens are present" do
+      expect(instance.has_consumer_token?).to be true
+    end
+
+    it "should return request token" do
+      expect(@token["oauth_token"]).to eq "AT"
+      expect(@token["oauth_token_secret"]).to eq "ATS"
+      expect(@token["authorize_url"]).to eq("#{TwiRuby::OAuth::BASE_URL}/oauth/authorize?#{body}")
     end
   end
 
   describe "#get_access_token" do
-    subject { instance.get_access_token({"oauth_token" => "AT", "oauth_token_secret" => "ATS"}) }
+    before do
+      stub_post("/oauth/access_token").to_return(:status => 200, :body => body)
+      @token = instance.get_access_token("oauth_token" => "PS", "oauth_token_secret" => "PSS")
+    end
 
-    it "should return a Hash" do
-      is_expected.to be_a Hash
+    it "return true if oauth tokens are present" do
+      expect(instance.has_oauth_token?).to be true
+    end
+
+    it "should return access tokens" do
+      expect(@token["oauth_token"]).to eq "AT"
+      expect(@token["oauth_token_secret"]).to eq "ATS"
     end
   end
 
   describe "#get_response" do
-    it "raise TwiRuby::Error::NotFound" do
-      expect do
-        instance.get_response(TwiRuby::Request.new(instance), "/404?query=content")
-      end.to raise_error TwiRuby::Error::NotFound
+    before do
+      stub_post("/").to_return(:status => 401, :body => "Test error")
     end
 
     it "raise TwiRuby::Error::Unauthorized" do
       expect do
-        instance.get_response(TwiRuby::Request.new(instance), "/xml")
+        instance.get_response(TwiRuby::Request.new(instance), "/")
       end.to raise_error TwiRuby::Error::Unauthorized
-    end
-  end
-
-  describe "#has_consumer_token?" do
-    subject { instance.has_consumer_token? }
-
-    it "should return false" do
-      instance.consumer_key = "CK"
-
-      is_expected.to be false
-    end
-
-    it "should return true" do
-      instance.consumer_key = "CK"
-      instance.consumer_secret = "CS"
-
-      is_expected.to be true
-    end
-  end
-
-  describe "#has_oauth_token?" do
-    subject { instance.has_oauth_token? }
-
-    it "should return false" do
-      instance.access_token = "AT"
-
-      is_expected.to be false
-    end
-
-    it "should return true" do
-      instance.access_token = "AT"
-      instance.access_token_secret = "ATS"
-
-      is_expected.to be true
     end
   end
 end
