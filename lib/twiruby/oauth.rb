@@ -4,7 +4,9 @@ require "uri"
 module TwiRuby
   class OAuth
     include OAuth::Utils
-    attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret, :base_url
+    attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
+
+    BASE_URL = URI("https://api.twitter.com")
 
     def initialize(options = {})
       @consumer_key = nil
@@ -24,7 +26,7 @@ module TwiRuby
 
       get_response(Request.new(self), "/oauth/request_token") do |res|
         token = Hash[URI::decode_www_form(res.body)]
-        token["authorize_url"] = "#{base_url}/oauth/authorize?#{res.body}"
+        token["authorize_url"] = "#{BASE_URL}/oauth/authorize?#{res.body}"
 
         return token
       end
@@ -35,24 +37,19 @@ module TwiRuby
       @access_token_secret = request_token["oauth_token_secret"]
 
       get_response(Request.new(self), "/oauth/access_token", options) do |res|
-        return Hash[URI::decode_www_form(res.body)]
+        Hash[URI::decode_www_form(res.body)]
       end
     end
 
     def get_response(req, path, options = nil)
-      response = req.post(path, options)
+      res = req.post(path, options)
 
-      if response.code.to_i == 200
-        yield(response) if block_given?
-      elsif response.body.include?("<?xml")
-        fail(Error.type(response.code.to_i), Error.parse_xml(response.body)[1])
+      case res.code.to_i
+      when 200 
+        yield(res) if block_given?
       else
-        fail(Error.type(response.code.to_i), response.body)
+        fail(Error.type(res.code.to_i), Error.parse_message(res.body))
       end
-    end
-
-    def base_url
-      @base_url ||= URI("https://api.twitter.com")
     end
 
     def has_consumer_token?

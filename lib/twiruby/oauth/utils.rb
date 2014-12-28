@@ -6,6 +6,17 @@ require "uri"
 
 include ERB::Util
 
+class Hash
+  def to_query
+    str = ""
+    self.each do |s|
+      str << "#{s[0]}=#{url_encode(s[1])}&"
+    end
+
+    return str[0..str.length - 2]
+  end
+end
+
 module TwiRuby
   class OAuth
     module Utils
@@ -17,11 +28,7 @@ module TwiRuby
       end
 
       def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = nil)
-        parameters = ""
-        generate_parameters(oauth_nonce, oauth_timestamp, nil, options).each do |s|
-          parameters << "#{s[0]}=#{s[1]}&"
-        end
-        parameters = parameters[0..parameters.length - 2]
+        parameters = generate_parameters(oauth_nonce, oauth_timestamp, nil, options).to_query
 
         oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
         oauth_signature_base << url_encode("&#{body}") if body != nil

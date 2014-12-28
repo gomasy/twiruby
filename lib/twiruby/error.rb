@@ -67,21 +67,31 @@ module TwiRuby
         ERRORS[code]
       end
 
-      def parse_xml(body)
-        xml = REXML::Document.new(body)
-
-        if xml.elements["/hash/error"] != nil
-          return [ nil, xml.elements["/hash/error"].text ]
-        elsif xml.elements["/errors"] != nil
-          element = xml.elements["/errors"]
-          return [ element.attributes["code"], element.text ]
+      def parse_message(body)
+        begin
+          parse_json_message(body)
+        rescue JSON::ParserError
+          case body.include?("<?xml")
+          when true
+            parse_xml_message(body)
+          when false
+            body
+          end
         end
       end
 
-      def parse_json(body)
-        error = JSON.parse(body).errors[0]
+      def parse_xml_message(body)
+        xml = REXML::Document.new(body)
 
-        return [ error.code, error.message ]
+        if xml.elements["/hash/error"] != nil
+          xml.elements["/hash/error"].text
+        elsif xml.elements["/errors"] != nil
+          xml.elements["/errors"].text
+        end
+      end
+
+      def parse_json_message(body)
+        JSON.parse(body).errors[0].message
       end
     end
   end
