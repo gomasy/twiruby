@@ -101,6 +101,7 @@ RSpec.configure do |config|
 end
 
 require "webmock/rspec"
+WebMock.disable_net_connect!(:allow => "codeclimate.com")
 
 def stub_get(path)
   stub_request(:get, "#{TwiRuby::OAuth::BASE_URL}#{path}")
