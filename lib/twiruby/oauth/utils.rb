@@ -9,8 +9,8 @@ include ERB::Util
 class Hash
   def to_query
     str = ""
-    self.each do |s|
-      str << "#{s[0]}=#{url_encode(s[1])}&"
+    self.each do |key, value|
+      str << "#{key}=#{url_encode(value)}&"
     end
 
     return str[0..str.length - 2]
@@ -45,8 +45,8 @@ module TwiRuby
         oauth_signature = url_encode(generate_signature(oauth_signature_base, sign_key))
 
         parameters = "OAuth "
-        generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature).each do |s|
-          parameters << "#{s[0]}=\"#{s[1]}\", "
+        generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature).each do |key, value|
+          parameters << "#{key}=\"#{value}\", "
         end
 
         return parameters[0..parameters.length - 3]
