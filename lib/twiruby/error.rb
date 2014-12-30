@@ -67,15 +67,14 @@ module TwiRuby
         ERRORS[code]
       end
 
-      def parse_message(body)
+      def parse_message(res)
         begin
-          parse_json_message(body)
+          parse_json_message(res.body)
         rescue JSON::ParserError
-          case body.include?("<?xml")
-          when true
-            parse_xml_message(body)
-          when false
-            body
+          if res["content-type"].include?("application/xml") || res.body.include?("<?xml")
+            parse_xml_message(res.body)
+          else
+            res.body
           end
         end
       end
@@ -85,8 +84,8 @@ module TwiRuby
 
         if xml.elements["/hash/error"] != nil
           xml.elements["/hash/error"].text
-        elsif xml.elements["/errors"] != nil
-          xml.elements["/errors"].text
+        elsif xml.elements["/errors/error"] != nil
+          xml.elements["/errors/error"].text
         end
       end
 

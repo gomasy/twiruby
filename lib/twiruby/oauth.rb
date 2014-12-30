@@ -48,7 +48,7 @@ module TwiRuby
       when 200 
         yield(res) if block_given?
       else
-        fail(Error.type(res.code.to_i), Error.parse_message(res.body))
+        fail(Error.type(res.code.to_i), Error.parse_message(res))
       end
     end
 
