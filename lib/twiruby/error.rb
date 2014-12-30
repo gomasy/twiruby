@@ -90,7 +90,7 @@ module TwiRuby
       end
 
       def parse_json_message(body)
-        JSON.parse(body).errors[0].message
+        JSON.parse(body)["errors"][0]["message"]
       end
     end
   end

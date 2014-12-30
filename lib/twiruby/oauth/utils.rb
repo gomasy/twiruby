@@ -13,7 +13,7 @@ class Hash
       str << "#{key}=#{url_encode(value)}&"
     end
 
-    return str[0..str.length - 2]
+    str[0..str.length - 2]
   end
 end
 
@@ -33,7 +33,7 @@ module TwiRuby
         oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
         oauth_signature_base << url_encode("&#{body}") if body != nil
 
-        return oauth_signature_base
+        oauth_signature_base
       end
 
       def generate_header(http_method, url, body = nil, options = nil)
@@ -49,7 +49,7 @@ module TwiRuby
           parameters << "#{key}=\"#{url_encode(value)}\", "
         end
 
-        return parameters[0..parameters.length - 3]
+        parameters[0..parameters.length - 3]
       end
 
       def generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature = nil, options = nil)
@@ -63,7 +63,7 @@ module TwiRuby
         parameters["oauth_version"] = OAUTH_VERSION
         parameters.update(options) if options != nil
 
-        return Hash[parameters.sort]
+        Hash[parameters.sort]
       end
     end
   end

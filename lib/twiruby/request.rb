@@ -18,8 +18,14 @@ module TwiRuby
         "User-Agent" => user_agent
       }
       path = "#{path}?#{options.to_query}" if options != nil
+      res = @https.send_request(method, path, body, header)
 
-      @https.send_request(method, path, body, header)
+      case res.code.to_i
+      when 200
+        res
+      else
+        fail(Error.type(res.code.to_i), Error.parse_message(res))
+      end
     end
 
     def get(path, options = nil)
