@@ -20,12 +20,7 @@ module TwiRuby
       path = "#{path}?#{options.to_query}" if options != nil
       res = @https.send_request(method, path, body, header)
 
-      case res.code.to_i
-      when 200
-        res
-      else
-        fail(Error.type(res.code.to_i), Error.parse_message(res))
-      end
+      res.code.to_i == 200 ? res : fail(Error.type(res.code.to_i), Error.parse_message(res))
     end
 
     def get(path, options = nil)
