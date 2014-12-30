@@ -48,16 +48,4 @@ describe TwiRuby::OAuth do
       expect(token["oauth_token_secret"]).to eq "ATS"
     end
   end
-
-  describe "#get_response" do
-    before do
-      stub_post("/").to_return(:status => 401, :headers => { "content-type" => "text/html" }, :body => "Test error")
-    end
-
-    it "raise TwiRuby::Error::Unauthorized" do
-      expect do
-        instance.get_response(TwiRuby::Request.new(instance), "/")
-      end.to raise_error TwiRuby::Error::Unauthorized
-    end
-  end
 end

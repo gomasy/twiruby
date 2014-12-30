@@ -13,7 +13,7 @@ describe TwiRuby::Error do
   end
 
   describe ".parse_message" do
-    context "case /hash/error" do
+    context "case of xml" do
       before do
         stub_get("/").to_return(:status => 401, :headers => { "content-type" => "application/xml" }, :body =><<EOS
 <?xml version="1.0" encoding="UTF-8"?>
@@ -24,12 +24,14 @@ EOS
         )
       end
 
-      subject { TwiRuby::Error.parse_message(TwiRuby::Request.new(instance).get("/")) }
-
-      it { is_expected.to eq "Test error" }
+      it "should raise TwiRuby::Error::Unauthorized" do
+        expect do
+          TwiRuby::Error.parse_message(TwiRuby::Request.new(instance).get("/"))
+        end.to raise_error TwiRuby::Error::Unauthorized, "Test error"
+      end
     end
 
-    context "case /errors/error" do
+    context "case of xml" do
       before do
         stub_get("/").to_return(:status => 401, :headers => { "content-type" => "application/xml" }, :body =><<EOS
 <?xml version="1.0" encoding="UTF-8"?>
@@ -40,9 +42,23 @@ EOS
         )
       end
 
-      subject { TwiRuby::Error.parse_message(TwiRuby::Request.new(instance).get("/")) }
+      it "should raise TwiRuby::Error::Unauthorized" do
+        expect do
+          TwiRuby::Error.parse_message(TwiRuby::Request.new(instance).get("/"))
+        end.to raise_error TwiRuby::Error::Unauthorized, "Test error"
+      end
+    end
 
-      it { is_expected.to eq "Test error" }
+    context "case of html(?)" do
+      before do
+        stub_get("/").to_return(:status => 401, :headers => { "content-type" => "text/html" }, :body => "Test error")
+      end
+
+      it "should raise TwiRuby::Error::Unauthorized" do
+        expect do
+          TwiRuby::Error.parse_message(TwiRuby::Request.new(instance).get("/"))
+        end.to raise_error TwiRuby::Error::Unauthorized, "Test error"
+      end
     end
   end
 end
