@@ -42,11 +42,11 @@ module TwiRuby
         oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body, options)
 
         sign_key = "#{consumer_secret}&#{access_token_secret}"
-        oauth_signature = url_encode(generate_signature(oauth_signature_base, sign_key))
+        oauth_signature = generate_signature(oauth_signature_base, sign_key)
 
         parameters = "OAuth "
         generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature).each do |key, value|
-          parameters << "#{key}=\"#{value}\", "
+          parameters << "#{key}=\"#{url_encode(value)}\", "
         end
 
         return parameters[0..parameters.length - 3]
