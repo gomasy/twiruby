@@ -53,7 +53,7 @@ module TwiRuby
         parameters["oauth_timestamp"] = oauth_timestamp
         parameters["oauth_token"] = access_token if access_token != nil
         parameters["oauth_version"] = OAUTH_VERSION
-        parameters.update(options) if !options.empty?
+        parameters.merge(options) if !options.empty?
 
         Hash[parameters.sort]
       end
