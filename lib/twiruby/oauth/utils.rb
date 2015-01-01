@@ -4,18 +4,10 @@ require "base64"
 require "erb"
 require "uri"
 
+require "twiruby/utils"
+
 include ERB::Util
-
-class Hash
-  def to_query
-    str = ""
-    self.each do |key, value|
-      str << "#{key}=#{url_encode(value)}&"
-    end
-
-    str[0..str.length - 2]
-  end
-end
+include TwiRuby::Utils
 
 module TwiRuby
   class OAuth
@@ -27,8 +19,8 @@ module TwiRuby
         Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
       end
 
-      def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = nil)
-        parameters = generate_parameters(oauth_nonce, oauth_timestamp, nil, options).to_query
+      def generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = {})
+        parameters = to_query(generate_parameters(oauth_nonce, oauth_timestamp, nil, options))
 
         oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
         oauth_signature_base << url_encode("&#{body}") if body != nil
@@ -36,7 +28,7 @@ module TwiRuby
         oauth_signature_base
       end
 
-      def generate_header(http_method, url, body = nil, options = nil)
+      def generate_header(http_method, url, body = nil, options = {})
         oauth_nonce = SecureRandom.hex
         oauth_timestamp = Time.now.to_i
         oauth_signature_base = generate_signature_base(http_method, url, oauth_nonce, oauth_timestamp, body, options)
@@ -52,7 +44,7 @@ module TwiRuby
         parameters[0..parameters.length - 3]
       end
 
-      def generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature = nil, options = nil)
+      def generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature = nil, options = {})
         parameters = {}
         parameters["oauth_consumer_key"] = consumer_key
         parameters["oauth_nonce"] = oauth_nonce
@@ -61,7 +53,7 @@ module TwiRuby
         parameters["oauth_timestamp"] = oauth_timestamp
         parameters["oauth_token"] = access_token if access_token != nil
         parameters["oauth_version"] = OAUTH_VERSION
-        parameters.update(options) if options != nil
+        parameters.update(options) if !options.empty?
 
         Hash[parameters.sort]
       end

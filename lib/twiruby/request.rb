@@ -1,35 +1,46 @@
 require "net/https"
 require "erb"
 
+require "twiruby/utils"
+
 module TwiRuby
   class Request
+    include TwiRuby::Utils
     attr_writer :user_agent
 
-    def initialize(oauth)
-      @oauth = oauth
+    METHODS = {
+      "GET" => Net::HTTP::Get,
+      "POST" => Net::HTTP::Post
+    }
 
-      @https = Net::HTTP.new(OAuth::BASE_URL.host, OAuth::BASE_URL.port)
+    def initialize(oauth, url)
+      @oauth = oauth
+      @url = url
+
+      @https = Net::HTTP.new(url.host, url.port)
       @https.use_ssl = true
+      @https.verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
 
-    def request(method, path, body = nil, options = nil)
-      header = {
-        "Authorization" => @oauth.generate_header(method, "#{OAuth::BASE_URL}#{path}", body, options),
+    def create_request(method, path, body = nil, options = {})
+      path = "#{path}?#{to_query(options)}" if !options.empty?
+      METHODS[method].new(path, {
+        "Authorization" => @oauth.generate_header(method, "#{@url}#{path.gsub(/\?#{to_query(options)}/, "")}", body, options),
         "User-Agent" => user_agent
-      }
-      path = "#{path}?#{options.to_query}" if options != nil
-      res = @https.send_request(method, path, body, header)
+      })
+    end
 
+    def request(method, path, body = nil, options = {}, &blk)
+      res = @https.request(create_request(method, path, body, options), body)
       res.code.to_i == 200 ? res : fail(Error.type(res.code.to_i), Error.parse_message(res))
     end
 
-    def get(path, options = nil)
-      request("GET", path, nil, options)
+    def get(path, options = {}, &blk)
+      request("GET", path, nil, options, &blk)
     end
 
-    def post(path, data = nil, options = nil)
-      data = data != nil ? data.to_query : nil
-      request("POST", path, data, options)
+    def post(path, data = nil, options = {}, &blk)
+      request("POST", path, to_query(data), options, &blk)
     end
 
     def user_agent

@@ -1,12 +1,12 @@
-require "twiruby/oauth/utils"
 require "uri"
+
+require "twiruby/rest/request"
+require "twiruby/oauth/utils"
 
 module TwiRuby
   class OAuth
     include OAuth::Utils
     attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
-
-    BASE_URL = URI("https://api.twitter.com")
 
     def initialize(options = {})
       @consumer_key = nil
@@ -24,18 +24,18 @@ module TwiRuby
       @consumer_key = consumer_key
       @consumer_secret = consumer_secret
 
-      res = Request.new(self).post("/oauth/request_token")
+      res = REST::Request.new(self).post("/oauth/request_token")
       token = Hash[URI::decode_www_form(res.body)]
-      token["authorize_url"] = "#{BASE_URL}/oauth/authorize?#{res.body}"
+      token["authorize_url"] = "#{REST::BASE_URL}/oauth/authorize?#{res.body}"
 
       token
     end
 
-    def get_access_token(request_token, options = nil)
+    def get_access_token(request_token, options = {})
       @access_token = request_token["oauth_token"]
       @access_token_secret = request_token["oauth_token_secret"]
 
-      res = Request.new(self).post("/oauth/access_token", options)
+      res = REST::Request.new(self).post("/oauth/access_token", options)
       Hash[URI::decode_www_form(res.body)]
     end
 
