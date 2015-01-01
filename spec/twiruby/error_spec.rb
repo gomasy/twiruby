@@ -26,7 +26,7 @@ EOS
 
       it "should raise TwiRuby::Error::Unauthorized" do
         expect do
-          TwiRuby::Error.parse_message(TwiRuby::Request.new(instance).get("/"))
+          TwiRuby::Error.parse_message(TwiRuby::REST::Request.new(instance).get("/"))
         end.to raise_error TwiRuby::Error::Unauthorized, "Test error"
       end
     end
@@ -44,7 +44,7 @@ EOS
 
       it "should raise TwiRuby::Error::Unauthorized" do
         expect do
-          TwiRuby::Error.parse_message(TwiRuby::Request.new(instance).get("/"))
+          TwiRuby::Error.parse_message(TwiRuby::REST::Request.new(instance).get("/"))
         end.to raise_error TwiRuby::Error::Unauthorized, "Test error"
       end
     end
@@ -56,7 +56,7 @@ EOS
 
       it "should raise TwiRuby::Error::Unauthorized" do
         expect do
-          TwiRuby::Error.parse_message(TwiRuby::Request.new(instance).get("/"))
+          TwiRuby::Error.parse_message(TwiRuby::REST::Request.new(instance).get("/"))
         end.to raise_error TwiRuby::Error::Unauthorized, "Test error"
       end
     end

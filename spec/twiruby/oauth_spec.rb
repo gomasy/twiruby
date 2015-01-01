@@ -23,7 +23,7 @@ describe TwiRuby::OAuth do
       token = instance.get_request_token
       expect(token["oauth_token"]).to eq "AT"
       expect(token["oauth_token_secret"]).to eq "ATS"
-      expect(token["authorize_url"]).to eq "#{TwiRuby::OAuth::BASE_URL}/oauth/authorize?#{body}"
+      expect(token["authorize_url"]).to eq "#{TwiRuby::REST::BASE_URL}/oauth/authorize?#{body}"
     end
   end
 
