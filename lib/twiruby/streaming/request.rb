@@ -4,18 +4,28 @@ module TwiRuby
   module Streaming
     class Request < TwiRuby::Request
       def create_request(method, path, body = nil, options = {})
-        path = "#{path}?#{to_query(options)}" if !options.empty?
-        METHODS[method].new(path, {
+        full_path = !options.empty? ? "#{path}?#{to_query(options)}" : path
+        METHODS[method].new(full_path, {
           "Accept-Encoding" => "identity",
-          "Authorization" => @oauth.generate_header(method, "#{@url}#{path.gsub(/\?#{to_query(options)}/, "")}", body, options),
+          "Authorization" => @oauth.generate_header(method, "#{@url}#{path}", body, options),
           "User-Agent" => user_agent
         })
       end
 
       def request(method, path, body = nil, options = {}, &blk)
         @https.request(create_request(method, path, body, options)) do |res|
+          buffer = ""
           res.read_body do |chunk|
-            blk.call(chunk)
+            next if chunk == "" || chunk == "\r\n"
+
+            if !chunk.end_with?("\r\n")
+              buffer << chunk
+            else
+              buffer << chunk
+
+              blk.call(buffer)
+              buffer = ""
+            end
           end
         end
       end
