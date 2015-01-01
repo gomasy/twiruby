@@ -46,6 +46,8 @@ module TwiRuby
 
       def generate_parameters(oauth_nonce, oauth_timestamp, oauth_signature = nil, options = {})
         parameters = {}
+        parameters.merge!(options) if !options.empty?
+
         parameters["oauth_consumer_key"] = consumer_key
         parameters["oauth_nonce"] = oauth_nonce
         parameters["oauth_signature"] = oauth_signature if oauth_signature != nil
@@ -53,7 +55,6 @@ module TwiRuby
         parameters["oauth_timestamp"] = oauth_timestamp
         parameters["oauth_token"] = access_token if access_token != nil
         parameters["oauth_version"] = OAUTH_VERSION
-        parameters.merge(options) if !options.empty?
 
         Hash[parameters.sort]
       end
