@@ -111,3 +111,7 @@ end
 def stub_post(path)
   stub_request(:post, "#{TwiRuby::REST::BASE_URL}#{path}")
 end
+
+def fixtures(file)
+  File.read("#{File.expand_path("../fixtures/", __FILE__)}/#{file}")
+end

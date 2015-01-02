@@ -15,13 +15,7 @@ describe TwiRuby::Error do
   describe ".parse_message" do
     context "case of xml" do
       before do
-        stub_get("/").to_return(:status => 401, :headers => { "content-type" => "application/xml" }, :body =><<EOS
-<?xml version="1.0" encoding="UTF-8"?>
-<hash>
-  <error>Test error</error>
-</hash>
-EOS
-        )
+        stub_get("/").to_return(:status => 401, :headers => { "content-type" => "application/xml" }, :body => fixtures("error1.xml"))
       end
 
       it "should raise TwiRuby::Error::Unauthorized" do
@@ -33,13 +27,7 @@ EOS
 
     context "case of xml" do
       before do
-        stub_get("/").to_return(:status => 401, :headers => { "content-type" => "application/xml" }, :body =><<EOS
-<?xml version="1.0" encoding="UTF-8"?>
-<errors>
-  <error code="1">Test error</error>
-</errors>
-EOS
-        )
+        stub_get("/").to_return(:status => 401, :headers => { "content-type" => "application/xml" }, :body => fixtures("error2.xml"))
       end
 
       it "should raise TwiRuby::Error::Unauthorized" do
