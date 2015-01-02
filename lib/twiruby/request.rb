@@ -23,8 +23,7 @@ module TwiRuby
     end
 
     def create_request(method, path, body = nil, options = {})
-      full_path = !options.empty? ? "#{path}?#{to_query(options)}" : path
-      METHODS[method].new(full_path, {
+      METHODS[method].new((!options.empty? ? "#{path}?#{to_query(options)}" : path), {
         "Authorization" => @oauth.generate_header(method, @url + path, body, options),
         "User-Agent" => user_agent
       })
