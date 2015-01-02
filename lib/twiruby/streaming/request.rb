@@ -17,11 +17,8 @@ module TwiRuby
           res.read_body do |chunk|
             next if chunk == "" || chunk == "\r\n"
 
-            if !chunk.end_with?("\r\n")
-              buffer << chunk
-            else
-              buffer << chunk
-
+            buffer << chunk
+            if chunk.end_with?("\r\n")
               blk.call(buffer)
               buffer = ""
             end
