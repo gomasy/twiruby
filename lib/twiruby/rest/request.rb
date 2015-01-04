@@ -7,7 +7,7 @@ module TwiRuby
     BASE_URL = URI.parse("https://api.twitter.com")
 
     class Request < TwiRuby::Request
-      def initialize(oauth, url = BASE_URL)
+      def initialize(tokens, url = BASE_URL)
         super
       end
     end
