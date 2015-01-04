@@ -15,7 +15,8 @@ module TwiRuby
     OAUTH_SIGNATURE_METHOD = "HMAC-SHA1"
 
     class << self
-      def generate_signature(oauth_signature_base, sign_key)
+      def generate_signature(tokens, oauth_signature_base)
+        sign_key = "#{tokens[:consumer_secret]}&#{tokens[:access_token_secret]}"
         Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
       end
 
@@ -33,11 +34,8 @@ module TwiRuby
         oauth_timestamp = Time.now.to_i
         oauth_signature_base = generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body, options)
 
-        sign_key = "#{tokens[:consumer_secret]}&#{tokens[:access_token_secret]}"
-        oauth_signature = generate_signature(oauth_signature_base, sign_key)
-
         parameters = "OAuth "
-        generate_parameters(tokens, oauth_nonce, oauth_timestamp, oauth_signature).each do |key, value|
+        generate_parameters(tokens, oauth_nonce, oauth_timestamp, generate_signature(tokens, oauth_signature_base)).each do |key, value|
           parameters << "#{key}=\"#{url_encode(value)}\", "
         end
 
