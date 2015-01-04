@@ -5,4 +5,4 @@ require "twiruby/oauth"
 require "twiruby/version"
 
 require "twiruby/rest/client"
-require "twiruby/streaming/request"
+require "twiruby/streaming/client"
