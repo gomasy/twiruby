@@ -1,7 +1,7 @@
 module TwiRuby
   module REST
     module Tweets
-      # Destroys the status specified by the required ID parameter.
+      # Returns the destroyed status if successful.
       #
       def destroy(id, options = {})
         @req.post("/1.1/statuses/destroy/#{id}.json", nil, options)
@@ -19,7 +19,7 @@ module TwiRuby
         @req.get("/1.1/statuses/oembed.json", options)
       end
 
-      # Retweets a tweet.
+      # Returns the original tweet with retweet details embedded.
       #
       def retweet(id, options = {})
         @req.post("/1.1/statuses/retweet/#{id}.json", nil, options)
