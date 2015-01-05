@@ -1,4 +1,3 @@
-require "twiruby/client"
 require "twiruby/error"
 require "twiruby/headers"
 require "twiruby/oauth"
