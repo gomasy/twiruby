@@ -82,9 +82,9 @@ module TwiRuby
       def parse_xml_message(body)
         xml = REXML::Document.new(body)
 
-        if xml.elements["/hash/error"] != nil
+        if !xml.elements["/hash/error"].nil?
           xml.elements["/hash/error"].text
-        elsif xml.elements["/errors/error"] != nil
+        elsif !xml.elements["/errors/error"].nil?
           xml.elements["/errors/error"].text
         end
       end

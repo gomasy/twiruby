@@ -1,7 +1,7 @@
 module TwiRuby
   module Utils
     def build_query(hash)
-      if hash != nil
+      if !hash.nil?
         str = ""
         hash.each do |key, value|
           str << "#{key}=#{url_encode(value)}&"

@@ -19,11 +19,11 @@ module TwiRuby
     end
 
     def consumer_token?
-      !!(consumer_key != nil && consumer_secret != nil)
+      !!(!consumer_key.nil? && !consumer_secret.nil?)
     end
 
     def oauth_token?
-      !!(access_token != nil && access_token_secret != nil)
+      !!(!access_token.nil? && !access_token_secret.nil?)
     end
   end
 end
