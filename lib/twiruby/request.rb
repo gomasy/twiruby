@@ -23,15 +23,15 @@ module TwiRuby
     end
 
     def create_request(method, path, body = nil, options = {})
-      METHODS[method].new((!options.empty? ? "#{path}?#{to_query(options)}" : path), {
+      METHODS[method].new((!options.empty? ? "#{path}?#{build_query(options)}" : path), {
         "Authorization" => Headers.generate_header(@tokens, method, @url + path, body, options),
         "User-Agent" => user_agent
       })
     end
 
-    def request(req, body = nil, options = {}, &blk)
+    def request(req, body = nil, &blk)
       res = @https.request(req, body)
-      res.code.to_i == 200 ? res : fail(Error.type(res.code.to_i), Error.parse_message(res))
+      res.code == "200" ? res : fail(Error.type(res.code), Error.parse_message(res))
     end
 
     def get(path, options = {}, &blk)
@@ -39,7 +39,7 @@ module TwiRuby
     end
 
     def post(path, data = nil, options = {}, &blk)
-      body = to_query(data)
+      body = build_query(data)
       request(create_request("POST", path, body, options), body, &blk)
     end
 

@@ -1,6 +1,6 @@
 module TwiRuby
   module Utils
-    def to_query(hash)
+    def build_query(hash)
       if hash != nil
         str = ""
         hash.each do |key, value|

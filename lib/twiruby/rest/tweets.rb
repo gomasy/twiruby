@@ -3,13 +3,14 @@ module TwiRuby
     module Tweets
       # Returns the destroyed status if successful.
       #
-      def destroy(id, options = {})
+      def destroy_status(id, options = {})
         @req.post("/1.1/statuses/destroy/#{id}.json", nil, options)
       end
 
       # Returns fully-hydrated tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter.
       #
-      def lookup(options = {})
+      def lookup(id, options = {})
+        options["id"] = id.join(",")
         @req.get("/1.1/statuses/lookup.json", options)
       end
 
@@ -33,20 +34,22 @@ module TwiRuby
 
       # Returns a collection of up to 100 user IDs belonging to users who have retweeted the tweet specified by the id parameter.
       #
-      def retweeters(options = {})
+      def retweeters(id, options = {})
+        options["id"] = id
         @req.get("/1.1/statuses/retweeters/ids.json", options)
       end
 
       # Returns a single Tweet, specified by the id parameter.
       #
-      def show(id, options = {})
+      def show_status(id, options = {})
         @req.get("/1.1/statuses/show/#{id}.json", options)
       end
 
       # Updates the authenticating user’s current status, also known as tweeting.
       #
       def update(status, options = {})
-        @req.post("/1.1/statuses/update.json", { "status" => status }, options)
+        options["status"] = status
+        @req.post("/1.1/statuses/update.json", nil, options)
       end
     end
   end

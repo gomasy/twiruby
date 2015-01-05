@@ -1,3 +1,4 @@
+require "json"
 require "uri"
 
 require "twiruby/request"
@@ -9,7 +10,7 @@ module TwiRuby
     SITE_BASE_URL = URI.parse("https://sitestream.twitter.com")
 
     class Request < TwiRuby::Request
-      def request(req, body = nil, options = {}, &blk)
+      def request(req, body = nil, &blk)
         req["Accept-Encoding"] = "identity"
 
         @https.request(req) do |res|
@@ -19,8 +20,13 @@ module TwiRuby
 
             buffer << chunk.chomp
             if chunk.end_with?("\r\n")
-              blk.call(buffer)
-              buffer = ""
+              begin
+                blk.call(JSON.parse(buffer))
+              rescue JSON::ParserError
+                # crush
+              ensure
+                buffer = ""
+              end
             end
           end
         end

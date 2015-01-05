@@ -21,7 +21,7 @@ module TwiRuby
       end
 
       def generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = {})
-        parameters = to_query(generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, options))
+        parameters = build_query(generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, options))
 
         oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
         oauth_signature_base << url_encode("&#{body}") if body != nil

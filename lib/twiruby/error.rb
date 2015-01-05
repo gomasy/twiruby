@@ -46,20 +46,20 @@ module TwiRuby
     GatewayTimeout = Class.new(self)
 
     ERRORS = {
-      304 => NotModified,
-      400 => BadRequest,
-      401 => Unauthorized,
-      403 => Forbidden,
-      404 => NotFound,
-      406 => NotAcceptable,
-      410 => Gone,
-      420 => EnhanceYourCalm,
-      422 => UnprocessableEntity,
-      429 => TooManyRequests,
-      500 => InternalServerError,
-      502 => BadGateway,
-      503 => ServiceUnavailable,
-      504 => GatewayTimeout
+      "304" => NotModified,
+      "400" => BadRequest,
+      "401" => Unauthorized,
+      "403" => Forbidden,
+      "404" => NotFound,
+      "406" => NotAcceptable,
+      "410" => Gone,
+      "420" => EnhanceYourCalm,
+      "422" => UnprocessableEntity,
+      "429" => TooManyRequests,
+      "500" => InternalServerError,
+      "502" => BadGateway,
+      "503" => ServiceUnavailable,
+      "504" => GatewayTimeout
     }
 
     class << self
