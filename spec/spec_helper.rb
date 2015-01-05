@@ -113,5 +113,5 @@ def stub_post(path)
 end
 
 def fixtures(file)
-  File.read("#{File.expand_path("../fixtures/", __FILE__)}/#{file}")
+  File.read("#{File.expand_path("../fixtures", __FILE__)}/#{file}")
 end

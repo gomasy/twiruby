@@ -11,12 +11,12 @@ describe TwiRuby::OAuth do
 
     it "return false if consumer tokens are not present" do
       client = TwiRuby::OAuth.new(consumer_key: "CK")
-      expect(client.has_consumer_token?).to be false
+      expect(client.consumer_token?).to be false
     end
 
     it "return true if consumer tokens are present" do
       client = TwiRuby::OAuth.new(consumer_key: "CK", consumer_secret: "CS")
-      expect(client.has_consumer_token?).to be true
+      expect(client.consumer_token?).to be true
     end
 
     it "should return request token" do
@@ -34,12 +34,12 @@ describe TwiRuby::OAuth do
 
     it "return false if oauth tokens are not present" do
       client = TwiRuby::OAuth.new(access_token: "AT")
-      expect(client.has_oauth_token?).to be false
+      expect(client.oauth_token?).to be false
     end
 
     it "return true if oauth tokens are present" do
       client = TwiRuby::OAuth.new(access_token: "AT", access_token_secret: "ATS")
-      expect(client.has_oauth_token?).to be true
+      expect(client.oauth_token?).to be true
     end
 
     it "should return access tokens" do
