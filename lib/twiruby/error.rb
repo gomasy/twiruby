@@ -3,6 +3,8 @@ require "json"
 
 module TwiRuby
   class Error < StandardError
+    attr_reader :code
+
     # HTTP status code 304
     NotModified = Class.new(self)
 
@@ -63,34 +65,43 @@ module TwiRuby
     }
 
     class << self
-      def type(code)
-        ERRORS[code]
+      def type(status_code)
+        ERRORS[status_code]
       end
 
-      def parse_message(res)
+      def parse_error(body)
         begin
-          parse_json_message(res.body)
+          parse_json(body)
         rescue JSON::ParserError
-          if res["content-type"].include?("application/xml") || res.body.include?("<?xml")
-            parse_xml_message(res.body)
+          if body.include?("<?xml")
+            parse_xml(body)
           else
-            res.body
+            body
           end
         end
       end
 
-      def parse_xml_message(body)
-        xml = REXML::Document.new(body)
+      def parse_json(body)
+        extract_json(JSON.parse(body)["errors"])
+      end
 
-        if !xml.elements["/hash/error"].nil?
-          xml.elements["/hash/error"].text
-        elsif !xml.elements["/errors/error"].nil?
-          xml.elements["/errors/error"].text
+      def extract_json(obj)
+        if obj.is_a?(Array)
+          error = obj.first
+          @code = error["code"]
+
+          error["message"]
+        else
+          obj
         end
       end
 
-      def parse_json_message(body)
-        JSON.parse(body)["errors"][0]["message"]
+      def parse_xml(body)
+        xml = REXML::Document.new(body).elements.first
+        element = xml.elements.first
+        @code = element.attributes["code"]
+
+        element.text
       end
     end
   end

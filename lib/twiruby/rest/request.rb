@@ -14,7 +14,7 @@ module TwiRuby
 
       def request(req, body = nil, &blk)
         res = @https.request(req, body)
-        res.code == "200" ? JSON.parse(res.body) : fail(Error.type(res.code), Error.parse_message(res))
+        res.code == "200" ? JSON.parse(res.body) : fail(Error.type(res.code), Error.parse_error(res.body))
       end
     end
   end

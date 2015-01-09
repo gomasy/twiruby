@@ -1,4 +1,5 @@
 require "twiruby/client"
+require "twiruby/rest/request"
 require "twiruby/rest/timelines"
 require "twiruby/rest/tweets"
 

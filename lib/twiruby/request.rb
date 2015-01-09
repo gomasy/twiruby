@@ -31,7 +31,7 @@ module TwiRuby
 
     def request(req, body = nil, &blk)
       res = @https.request(req, body)
-      res.code == "200" ? res : fail(Error.type(res.code), Error.parse_message(res))
+      res.code == "200" ? res : fail(Error.type(res.code), Error.parse_error(res.body))
     end
 
     def get(path, options = {}, &blk)
