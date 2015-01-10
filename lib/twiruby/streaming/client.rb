@@ -4,7 +4,7 @@ require "twiruby/streaming/request"
 module TwiRuby
   module Streaming
     class Client < TwiRuby::Client
-      def initialize
+      def initialize(options = {})
         super
         @public = Streaming::Request.new(tokens, Streaming::PUBLIC_BASE_URL)
         @site = Streaming::Request.new(tokens, Streaming::SITE_BASE_URL)
