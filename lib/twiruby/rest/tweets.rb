@@ -70,8 +70,7 @@ module TwiRuby
       # @param status [Integer, String]
       # @param options [Hash]
       def update(status, options = {})
-        options["status"] = status
-        @req.post("/1.1/statuses/update.json", nil, options)
+        @req.post("/1.1/statuses/update.json", { "status" => status }, options)
       end
     end
   end

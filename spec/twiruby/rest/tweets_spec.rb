@@ -106,7 +106,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#update" do
     before do
-      stub_post("/1.1/statuses/update.json?status=nullin%20it%20up").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
+      stub_post("/1.1/statuses/update.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
     end
 
     it "return an status" do
