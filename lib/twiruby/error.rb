@@ -82,10 +82,8 @@ module TwiRuby
       end
 
       def parse_json(body)
-        extract_json(JSON.parse(body)["errors"])
-      end
+        obj = JSON.parse(body)["errors"]
 
-      def extract_json(obj)
         if obj.is_a?(Array)
           error = obj.first
           @code = error["code"]

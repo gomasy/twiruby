@@ -1,7 +1,7 @@
 require "uri"
 
 require "twiruby/client"
-require "twiruby/rest/request"
+require "twiruby/request"
 
 module TwiRuby
   class OAuth < TwiRuby::Client

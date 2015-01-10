@@ -14,8 +14,7 @@ module TwiRuby
     }
 
     def initialize(tokens, url)
-      @tokens = tokens
-      @url = url
+      @tokens, @url = tokens, url
 
       @https = Net::HTTP.new(url.host, url.port)
       @https.use_ssl = true
