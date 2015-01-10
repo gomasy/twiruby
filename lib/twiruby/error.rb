@@ -82,7 +82,7 @@ module TwiRuby
       end
 
       def parse_json(body)
-        obj = JSON.parse(body)["errors"]
+        obj = JSON.parse(body).first.last
 
         if obj.is_a?(Array)
           error = obj.first
