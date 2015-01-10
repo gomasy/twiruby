@@ -4,6 +4,14 @@ describe TwiRuby::OAuth do
   let(:instance) { TwiRuby::OAuth.new(consumer_key: "CK", consumer_secret: "CS") }
   let(:body) { "oauth_token=AT&oauth_token_secret=ATS" }
 
+  describe "#new" do
+    subject { instance }
+
+    it "should return a TwiRuby::OAuth" do
+      is_expected.to be_a TwiRuby::OAuth
+    end
+  end
+
   describe "#get_request_token" do
     before do
       stub_post("/oauth/request_token").to_return(:status => 200, :body => body)
