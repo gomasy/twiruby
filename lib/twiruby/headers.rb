@@ -21,9 +21,9 @@ module TwiRuby
       end
 
       def generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = {})
-        parameters = build_query(generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, options))
+        query = build_query(generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, options))
 
-        oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(parameters)}"
+        oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(query)}"
         oauth_signature_base << url_encode("&#{body}") if !body.nil?
 
         oauth_signature_base
@@ -42,19 +42,16 @@ module TwiRuby
         parameters[0..parameters.length - 3]
       end
 
-      def generate_parameters(tokens, oauth_nonce, oauth_timestamp, oauth_signature = nil, options = {})
-        parameters = {}
-        parameters.merge!(options) if !options.empty?
+      def generate_parameters(tokens, oauth_nonce, oauth_timestamp, oauth_signature = nil, params = {})
+        params["oauth_consumer_key"] = tokens[:consumer_key]
+        params["oauth_nonce"] = oauth_nonce
+        params["oauth_signature"] = oauth_signature if !oauth_signature.nil?
+        params["oauth_signature_method"] = OAUTH_SIGNATURE_METHOD
+        params["oauth_timestamp"] = oauth_timestamp
+        params["oauth_token"] = tokens[:access_token] if !tokens[:access_token].nil?
+        params["oauth_version"] = OAUTH_VERSION
 
-        parameters["oauth_consumer_key"] = tokens[:consumer_key]
-        parameters["oauth_nonce"] = oauth_nonce
-        parameters["oauth_signature"] = oauth_signature if !oauth_signature.nil?
-        parameters["oauth_signature_method"] = OAUTH_SIGNATURE_METHOD
-        parameters["oauth_timestamp"] = oauth_timestamp
-        parameters["oauth_token"] = tokens[:access_token] if !tokens[:access_token].nil?
-        parameters["oauth_version"] = OAUTH_VERSION
-
-        Hash[parameters.sort]
+        Hash[params.sort]
       end
     end
   end
