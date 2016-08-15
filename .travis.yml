@@ -1,8 +1,10 @@
 language: ruby
 rvm:
-  - 1.9
   - 2.0
   - 2.1
+  - 2.2
   - ruby-head
 env:
   - CODECLIMATE_REPO_TOKEN=2ac612c2ae9b614085b300867fdcbe6f092aa89e48dddd117c6c5a4b20d218f4
+before_install:
+  - gem install bundler
