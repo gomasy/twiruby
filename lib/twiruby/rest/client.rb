@@ -7,6 +7,7 @@ require "twiruby/rest/tweets"
 module TwiRuby
   module REST
     class Client < TwiRuby::Client
+      include REST::Account
       include REST::Timelines
       include REST::Tweets
 
