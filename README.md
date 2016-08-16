@@ -35,7 +35,7 @@ oauth = TwiRuby::OAuth.new(consumer)
 
 # Get the request token
 token = oauth.get_request_token
-puts req_token[:authorize_url]
+puts token[:authorize_url]
 
 # Get the access token
 token = oauth.get_access_token(token, :oauth_verifier => gets.to_i)
