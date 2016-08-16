@@ -6,6 +6,7 @@ module TwiRuby
     class Client < TwiRuby::Client
       def initialize(options = {})
         super
+
         @public = Streaming::Request.new(tokens, Streaming::PUBLIC_BASE_URL)
         @site = Streaming::Request.new(tokens, Streaming::SITE_BASE_URL)
         @user = Streaming::Request.new(tokens, Streaming::USER_BASE_URL)

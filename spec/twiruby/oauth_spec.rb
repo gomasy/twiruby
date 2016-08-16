@@ -29,9 +29,9 @@ describe TwiRuby::OAuth do
 
     it "should return request token" do
       token = instance.get_request_token
-      expect(token["oauth_token"]).to eq "AT"
-      expect(token["oauth_token_secret"]).to eq "ATS"
-      expect(token["authorize_url"]).to eq "#{TwiRuby::REST::BASE_URL}/oauth/authorize?#{body}"
+      expect(token[:oauth_token]).to eq "AT"
+      expect(token[:oauth_token_secret]).to eq "ATS"
+      expect(token[:authorize_url]).to eq %(#{TwiRuby::REST::BASE_URL}/oauth/authorize?#{body})
     end
   end
 
@@ -52,8 +52,8 @@ describe TwiRuby::OAuth do
 
     it "should return access tokens" do
       token = instance.get_access_token("oauth_token" => "AT", "oauth_token_secret" => "ATS")
-      expect(token["oauth_token"]).to eq "AT"
-      expect(token["oauth_token_secret"]).to eq "ATS"
+      expect(token[:oauth_token]).to eq "AT"
+      expect(token[:oauth_token_secret]).to eq "ATS"
     end
   end
 end

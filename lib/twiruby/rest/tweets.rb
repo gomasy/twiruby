@@ -16,7 +16,7 @@ module TwiRuby
       # @param id [Array<Integer>, Array<String>]
       # @param options [Hash]
       def lookup(id, options = {})
-        options["id"] = id.join(",")
+        options[:id] = id.join(",")
         @req.get("/1.1/statuses/lookup.json", options)
       end
 
@@ -51,7 +51,7 @@ module TwiRuby
       # @see https://dev.twitter.com/rest/reference/get/statuses/retweeters/ids
       # @param id [Integer, String]
       def retweeters(id, options = {})
-        options["id"] = id
+        options[:id] = id
         @req.get("/1.1/statuses/retweeters/ids.json", options)
       end
 
@@ -70,7 +70,7 @@ module TwiRuby
       # @param status [Integer, String]
       # @param options [Hash]
       def update(status, options = {})
-        @req.post("/1.1/statuses/update.json", { "status" => status }, options)
+        @req.post("/1.1/statuses/update.json", { :status => status }, options)
       end
     end
   end

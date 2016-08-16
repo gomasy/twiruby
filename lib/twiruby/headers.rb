@@ -4,6 +4,9 @@ require "base64"
 require "erb"
 require "uri"
 
+require "active_support"
+require "active_support/core_ext"
+
 require "twiruby/utils"
 
 include ERB::Util
@@ -16,14 +19,14 @@ module TwiRuby
 
     class << self
       def generate_signature(tokens, oauth_signature_base)
-        sign_key = "#{tokens[:consumer_secret]}&#{tokens[:access_token_secret]}"
+        sign_key = %(#{tokens[:consumer_secret]}&#{tokens[:access_token_secret]})
         Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
       end
 
       def generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = {})
         query = build_query(generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, options))
 
-        oauth_signature_base = "#{http_method}&#{url_encode(url)}&#{url_encode(query)}"
+        oauth_signature_base = %(#{http_method}&#{url_encode(url)}&#{url_encode(query)})
         oauth_signature_base << url_encode("&#{body}") if !body.nil?
 
         oauth_signature_base
@@ -36,22 +39,24 @@ module TwiRuby
 
         parameters = "OAuth "
         generate_parameters(tokens, oauth_nonce, oauth_timestamp, generate_signature(tokens, oauth_signature_base)).each do |key, value|
-          parameters << "#{key}=\"#{url_encode(value)}\", "
+          parameters << %(#{key}="#{url_encode(value)}", )
         end
 
         parameters[0..parameters.length - 3]
       end
 
       def generate_parameters(tokens, oauth_nonce, oauth_timestamp, oauth_signature = nil, params = {})
-        params["oauth_consumer_key"] = tokens[:consumer_key]
-        params["oauth_nonce"] = oauth_nonce
-        params["oauth_signature"] = oauth_signature if !oauth_signature.nil?
-        params["oauth_signature_method"] = OAUTH_SIGNATURE_METHOD
-        params["oauth_timestamp"] = oauth_timestamp
-        params["oauth_token"] = tokens[:access_token] if !tokens[:access_token].nil?
-        params["oauth_version"] = OAUTH_VERSION
+        params = {
+          :oauth_consumer_key => tokens[:consumer_key],
+          :oauth_nonce => oauth_nonce,
+          :oauth_signature_method => OAUTH_SIGNATURE_METHOD,
+          :oauth_timestamp => oauth_timestamp,
+          :oauth_version => OAUTH_VERSION
+        }
+        params[:oauth_signature] = oauth_signature if !oauth_signature.nil?
+        params[:oauth_token] = tokens[:access_token] if !tokens[:access_token].nil?
 
-        Hash[params.sort]
+        Hash[params.sort].with_indifferent_access
       end
     end
   end
