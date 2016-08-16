@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe TwiRuby::REST::Account do
-  let(:instance) { TwiRuby::REST::Client.new(consumer_key: "CK", consumer_secret: "CS", access_token: "AT", access_token_secret: "ATS") }
+  let(:instance) { TwiRuby::REST::Client.new(consumer_key: "CK", consumer_secret: "CS", oauth_token: "AT", oauth_token_secret: "ATS") }
 
   describe "#settings" do
     before do

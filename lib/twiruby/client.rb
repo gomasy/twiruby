@@ -1,6 +1,6 @@
 module TwiRuby
   class Client
-    attr_accessor :consumer_key, :consumer_secret, :access_token, :access_token_secret
+    attr_accessor :consumer_key, :consumer_secret, :oauth_token, :oauth_token_secret
 
     def initialize(options = {})
       options.each do |key, value|
@@ -13,8 +13,8 @@ module TwiRuby
       {
         consumer_key: consumer_key,
         consumer_secret: consumer_secret,
-        access_token: access_token,
-        access_token_secret: access_token_secret
+        oauth_token: oauth_token,
+        oauth_token_secret: oauth_token_secret
       }
     end
 
@@ -23,7 +23,7 @@ module TwiRuby
     end
 
     def oauth_token?
-      !!(!access_token.nil? && !access_token_secret.nil?)
+      !!(!oauth_token.nil? && !oauth_token_secret.nil?)
     end
   end
 end

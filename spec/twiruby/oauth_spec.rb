@@ -41,12 +41,12 @@ describe TwiRuby::OAuth do
     end
 
     it "return false if oauth tokens are not present" do
-      client = TwiRuby::OAuth.new(access_token: "AT")
+      client = TwiRuby::OAuth.new(oauth_token: "AT")
       expect(client.oauth_token?).to be false
     end
 
     it "return true if oauth tokens are present" do
-      client = TwiRuby::OAuth.new(access_token: "AT", access_token_secret: "ATS")
+      client = TwiRuby::OAuth.new(oauth_token: "AT", oauth_token_secret: "ATS")
       expect(client.oauth_token?).to be true
     end
 

@@ -19,7 +19,7 @@ module TwiRuby
 
     class << self
       def generate_signature(tokens, oauth_signature_base)
-        sign_key = %(#{tokens[:consumer_secret]}&#{tokens[:access_token_secret]})
+        sign_key = %(#{tokens[:consumer_secret]}&#{tokens[:oauth_token_secret]})
         Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
       end
 
@@ -54,7 +54,7 @@ module TwiRuby
           :oauth_version => OAUTH_VERSION
         }
         params[:oauth_signature] = oauth_signature if !oauth_signature.nil?
-        params[:oauth_token] = tokens[:access_token] if !tokens[:access_token].nil?
+        params[:oauth_token] = tokens[:oauth_token] if !tokens[:oauth_token].nil?
 
         Hash[params.sort].with_indifferent_access
       end
