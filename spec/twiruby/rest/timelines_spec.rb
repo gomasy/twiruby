@@ -11,7 +11,7 @@ describe TwiRuby::REST::Timelines do
     it "returns the most recent tweets" do
       statuses = instance.home_timeline
       expect(statuses).to be_a Array
-      expect(statuses.last["text"]).to eq "nullin it up"
+      expect(statuses.last[:text]).to eq "nullin it up"
     end
   end
 
@@ -23,7 +23,7 @@ describe TwiRuby::REST::Timelines do
     it "returns the most recent tweets" do
       statuses = instance.mentions_timeline
       expect(statuses).to be_a Array
-      expect(statuses.last["text"]).to eq "nullin it up"
+      expect(statuses.last[:text]).to eq "nullin it up"
     end
   end
 
@@ -35,7 +35,7 @@ describe TwiRuby::REST::Timelines do
     it "returns the most recent tweets" do
       statuses = instance.user_timeline("screen_name" => "null")
       expect(statuses).to be_a Array
-      expect(statuses.last["text"]).to eq "nullin it up"
+      expect(statuses.last[:text]).to eq "nullin it up"
     end
   end
 
@@ -47,7 +47,7 @@ describe TwiRuby::REST::Timelines do
     it "returns the most recent tweets" do
       statuses = instance.retweets_of_me
       expect(statuses).to be_a Array
-      expect(statuses.last["text"]).to eq "nullin it up"
+      expect(statuses.last[:text]).to eq "nullin it up"
     end
   end
 end

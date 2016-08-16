@@ -12,7 +12,7 @@ describe TwiRuby::REST::Tweets do
     it "return an destroyed status" do
       status = instance.destroy_status(20303971)
       expect(status).to be_a Hash
-      expect(status["text"]).to eq "nullin it up"
+      expect(status[:text]).to eq "nullin it up"
     end
   end
 
@@ -25,7 +25,7 @@ describe TwiRuby::REST::Tweets do
     it "returns an array of statuses" do
       statuses = instance.lookup(@id)
       expect(statuses).to be_a Array
-      expect(statuses.last["text"]).to eq "nullin it up"
+      expect(statuses.last[:text]).to eq "nullin it up"
     end
   end
 
@@ -36,9 +36,9 @@ describe TwiRuby::REST::Tweets do
       end
 
       it "return an status" do
-        status = instance.oembed("id" => 20303971)
+        status = instance.oembed(:id => 20303971)
         expect(status).to be_a Hash
-        expect(status["author_name"]).to eq "not quite nothing"
+        expect(status[:author_name]).to eq "not quite nothing"
       end
     end
 
@@ -48,9 +48,9 @@ describe TwiRuby::REST::Tweets do
       end
 
       it "return an status" do
-        status = instance.oembed("url" => URI.parse("https://twitter.com/null/status/20303971"))
+        status = instance.oembed(:url => URI.parse("https://twitter.com/null/status/20303971"))
         expect(status).to be_a Hash
-        expect(status["author_name"]).to eq "not quite nothing"
+        expect(status[:author_name]).to eq "not quite nothing"
       end
     end
   end
@@ -63,7 +63,7 @@ describe TwiRuby::REST::Tweets do
     it "return an status" do
       status = instance.retweet(20303971)
       expect(status).to be_a Hash
-      expect(status["retweeted_status"]["text"]).to eq "nullin it up"
+      expect(status[:retweeted_status][:text]).to eq "nullin it up"
     end
   end
 
@@ -75,7 +75,7 @@ describe TwiRuby::REST::Tweets do
     it "returns an array of retweeted statuses" do
       statuses = instance.retweets(20303971)
       expect(statuses).to be_a Array
-      expect(statuses.first["retweeted_status"]["text"]).to eq "nullin it up"
+      expect(statuses.first[:retweeted_status][:text]).to eq "nullin it up"
     end
   end
 
@@ -87,8 +87,8 @@ describe TwiRuby::REST::Tweets do
     it "returns an array of ids" do
       ids = instance.retweeters(20303971)
       expect(ids).to be_a Hash
-      expect(ids["ids"]).to be_a Array
-      expect(ids["ids"].first).to eq 155148649
+      expect(ids[:ids]).to be_a Array
+      expect(ids[:ids].first).to eq 155148649
     end
   end
 
@@ -100,7 +100,7 @@ describe TwiRuby::REST::Tweets do
     it "return an status" do
       status = instance.show_status(20303971)
       expect(status).to be_a Hash
-      expect(status["text"]).to eq "nullin it up"
+      expect(status[:text]).to eq "nullin it up"
     end
   end
 
@@ -112,7 +112,7 @@ describe TwiRuby::REST::Tweets do
     it "return an status" do
       status = instance.update("nullin it up")
       expect(status).to be_a Hash
-      expect(status["text"]).to eq "nullin it up"
+      expect(status[:text]).to eq "nullin it up"
     end
   end
 end
