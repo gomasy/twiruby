@@ -60,10 +60,22 @@ describe TwiRuby::REST::Tweets do
       stub_post("/1.1/statuses/retweet/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("retweet.json"))
     end
 
-    it "return an status" do
+    it "return an retweeted status" do
       status = instance.retweet(20303971)
       expect(status).to be_a Hash
       expect(status[:retweeted_status][:text]).to eq "nullin it up"
+    end
+  end
+
+  describe "#unretweet" do
+    before do
+      stub_post("/1.1/statuses/unretweet/551893403395313664.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
+    end
+
+    it "return an original status" do
+      status = instance.unretweet(551893403395313664)
+      expect(status).to be_a Hash
+      expect(status[:id]).to eq 20303971
     end
   end
 

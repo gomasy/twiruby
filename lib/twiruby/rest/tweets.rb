@@ -37,6 +37,15 @@ module TwiRuby
         @req.post("/1.1/statuses/retweet/#{id}.json", nil, options)
       end
 
+      # Returns the original Tweet with retweet details embedded.
+      #
+      # @see https://dev.twitter.com/rest/reference/post/statuses/unretweet/:id
+      # @param id [Integer, String]
+      # @param options [Hash]
+      def unretweet(id, options = {})
+        @req.post("/1.1/statuses/unretweet/#{id}.json", nil, options)
+      end
+
       # Returns a collection of the 100 most recent retweets of the tweet specified by the id parameter.
       #
       # @see https://dev.twitter.com/rest/reference/get/statuses/retweets/:id
