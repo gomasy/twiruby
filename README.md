@@ -27,11 +27,10 @@ Or install it yourself as:
 ```ruby
 require "twiruby"
 
-consumer = {
+oauth = TwiRuby::OAuth.new(
   :consumer_key => "CONSUMER_KEY",
   :consumer_secret => "CONSUMER_SECRET"
-}
-oauth = TwiRuby::OAuth.new(consumer)
+)
 
 # Get the request token
 token = oauth.get_request_token
