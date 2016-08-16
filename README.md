@@ -3,7 +3,7 @@
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/github/Gomasy/twiruby.svg?style=flat)](https://codeclimate.com/github/Gomasy/twiruby)
 [![Code Climate](https://img.shields.io/codeclimate/github/Gomasy/twiruby.svg?style=flat)](https://codeclimate.com/github/Gomasy/twiruby)
 
-TODO: Write a gem description  
+A simple twitter library.  
 **[WARNING!!] This gem is in the process of being developed. There may be a destructive change.**
 
 ## Installation
@@ -22,9 +22,28 @@ Or install it yourself as:
 
     $ gem install twiruby
 
-## Usage
+## Example for status/update in oob
 
-TODO: Write usage instructions here
+```ruby
+require "twiruby"
+
+consumer = {
+  :consumer_key => "CONSUMER_KEY",
+  :consumer_secret => "CONSUMER_SECRET"
+}
+oauth = TwiRuby::OAuth.new(consumer)
+
+# Get the request token
+token = oauth.get_request_token
+puts req_token[:authorize_url]
+
+# Get the access token
+token = oauth.get_access_token(token, :oauth_verifier => gets.to_i)
+
+# Let's Tweet!
+client = TwiRuby::REST::Client.new(token)
+client.update("Test tweet!")
+```
 
 ## Contributing
 
