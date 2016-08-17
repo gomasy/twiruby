@@ -21,7 +21,7 @@ module TwiRuby
             buffer << chunk.chomp
             if chunk.end_with?("\r\n")
               begin
-                blk.call(JSON.parse(buffer))
+                blk.call(JSON.parse(buffer, symbolize_names: true))
               rescue JSON::ParserError
                 # crush
               ensure
