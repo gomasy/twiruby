@@ -5,7 +5,6 @@ require "twiruby/utils"
 
 module TwiRuby
   class Request
-    include TwiRuby::Utils
     attr_writer :user_agent
 
     METHODS = {
@@ -22,7 +21,7 @@ module TwiRuby
     end
 
     def create_request(method, path, body = nil, options = {})
-      METHODS[method].new((!options.empty? ? "#{path}?#{build_query(options)}" : path), {
+      METHODS[method].new((!options.empty? ? "#{path}?#{options.to_q}" : path), {
         "Authorization" => Headers.generate_header(@tokens, method, @url + path, body, options),
         "User-Agent" => user_agent
       })
@@ -37,9 +36,8 @@ module TwiRuby
       request(create_request("GET", path, nil, options), nil, &blk)
     end
 
-    def post(path, data = nil, options = {}, &blk)
-      body = build_query(data)
-      request(create_request("POST", path, body, options), body, &blk)
+    def post(path, body = nil, options = {}, &blk)
+      request(create_request("POST", path, body.to_q, options), body.to_q, &blk)
     end
 
     def user_agent

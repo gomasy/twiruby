@@ -4,13 +4,9 @@ require "base64"
 require "erb"
 require "uri"
 
-require "active_support"
-require "active_support/core_ext"
-
 require "twiruby/utils"
 
 include ERB::Util
-include TwiRuby::Utils
 
 module TwiRuby
   module Headers
@@ -20,11 +16,11 @@ module TwiRuby
     class << self
       def generate_signature(tokens, oauth_signature_base)
         sign_key = %(#{tokens[:consumer_secret]}&#{tokens[:oauth_token_secret]})
-        Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base))
+        Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base)).chomp
       end
 
       def generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = {})
-        query = build_query(generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, options))
+        query = generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, options).to_q
 
         oauth_signature_base = %(#{http_method}&#{url_encode(url)}&#{url_encode(query)})
         oauth_signature_base << url_encode("&#{body}") if !body.nil?
@@ -56,7 +52,7 @@ module TwiRuby
         params[:oauth_signature] = oauth_signature if !oauth_signature.nil?
         params[:oauth_token] = tokens[:oauth_token] if !tokens[:oauth_token].nil?
 
-        Hash[params.sort].with_indifferent_access
+        Hash[params.sort]
       end
     end
   end

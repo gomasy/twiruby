@@ -1,8 +1,5 @@
 require "uri"
 
-require "active_support"
-require "active_support/core_ext"
-
 require "twiruby/client"
 require "twiruby/request"
 
@@ -21,7 +18,7 @@ module TwiRuby
       token = Hash[URI::decode_www_form(res.body)]
       token[:authorize_url] = "#{REST::BASE_URL}/oauth/authorize?#{res.body}"
 
-      token.with_indifferent_access
+      token.symbolize_keys
     end
 
     # Allows a Consumer application to exchange the OAuth Request Token for an OAuth Access Token.
@@ -34,7 +31,7 @@ module TwiRuby
       @oauth_token_secret = request_token[:oauth_token_secret]
 
       res = request.post("/oauth/access_token", nil, options)
-      tokens.update(Hash[URI::decode_www_form(res.body)]).with_indifferent_access
+      tokens.update(Hash[URI::decode_www_form(res.body)]).symbolize_keys
     end
   end
 end
