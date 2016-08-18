@@ -42,17 +42,15 @@ module TwiRuby
       end
 
       def generate_parameters(tokens, oauth_nonce, oauth_timestamp, oauth_signature = nil, params = {})
-        params = {
-          :oauth_consumer_key => tokens[:consumer_key],
-          :oauth_nonce => oauth_nonce,
-          :oauth_signature_method => OAUTH_SIGNATURE_METHOD,
-          :oauth_timestamp => oauth_timestamp,
-          :oauth_version => OAUTH_VERSION
-        }
+        params[:oauth_consumer_key] = tokens[:consumer_key]
+        params[:oauth_nonce] = oauth_nonce
         params[:oauth_signature] = oauth_signature if !oauth_signature.nil?
+        params[:oauth_signature_method] = OAUTH_SIGNATURE_METHOD
+        params[:oauth_timestamp] = oauth_timestamp
         params[:oauth_token] = tokens[:oauth_token] if !tokens[:oauth_token].nil?
+        params[:oauth_version] = OAUTH_VERSION
 
-        Hash[params.sort]
+        Hash[params.sort].symbolize_keys
       end
     end
   end
