@@ -33,7 +33,7 @@ describe TwiRuby::REST::Timelines do
     end
 
     it "returns the most recent tweets" do
-      statuses = instance.user_timeline("screen_name" => "null")
+      statuses = instance.user_timeline(:screen_name => "null")
       expect(statuses).to be_a Array
       expect(statuses.last[:text]).to eq "nullin it up"
     end
