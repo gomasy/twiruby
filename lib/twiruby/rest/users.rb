@@ -5,7 +5,7 @@ module TwiRuby
       #
       # @see https://dev.twitter.com/rest/reference/get/users/lookup
       # @param options [Hash]
-      def lookup(options = {})
+      def users_lookup(options = {})
         @req.get("/1.1/users/lookup.json", options)
       end
 
@@ -13,7 +13,7 @@ module TwiRuby
       #
       # @see https://dev.twitter.com/rest/reference/get/users/show
       # @param options [Hash]
-      def show(options = {})
+      def users_show(options = {})
         @req.get("/1.1/users/show.json", options)
       end
 

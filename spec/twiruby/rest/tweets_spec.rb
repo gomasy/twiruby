@@ -4,26 +4,26 @@ require "uri"
 describe TwiRuby::REST::Tweets do
   let(:instance) { TwiRuby::REST::Client.new(consumer_key: "CK", consumer_secret: "CS", access_token: "AT", access_token_secret: "ATS") }
 
-  describe "#destroy_status" do
+  describe "#status_destroy" do
     before do
       stub_post("/1.1/statuses/destroy/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
     end
 
     it "return a destroyed status" do
-      status = instance.destroy_status(20303971)
+      status = instance.status_destroy(20303971)
       expect(status).to be_a Hash
       expect(status[:text]).to eq "nullin it up"
     end
   end
 
-  describe "#lookup" do
+  describe "#status_lookup" do
     before do
       @id = [20303971,20304451,275824752692707328,350499641130889218]
       stub_get("/1.1/statuses/lookup.json?id=#{@id.join(",")}").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("statuses.json"))
     end
 
     it "returns an array of statuses" do
-      statuses = instance.lookup(@id)
+      statuses = instance.status_lookup(@id)
       expect(statuses).to be_a Array
       expect(statuses.last[:text]).to eq "nullin it up"
     end
@@ -104,13 +104,13 @@ describe TwiRuby::REST::Tweets do
     end
   end
 
-  describe "#show_status" do
+  describe "#status_show" do
     before do
       stub_get("/1.1/statuses/show/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
     end
 
     it "return a status" do
-      status = instance.show_status(20303971)
+      status = instance.status_show(20303971)
       expect(status).to be_a Hash
       expect(status[:text]).to eq "nullin it up"
     end

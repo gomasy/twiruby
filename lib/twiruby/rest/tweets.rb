@@ -6,7 +6,7 @@ module TwiRuby
       # @see https://dev.twitter.com/rest/reference/post/statuses/destroy/:id
       # @param id [Integer, String]
       # @param options [Hash]
-      def destroy_status(id, options = {})
+      def status_destroy(id, options = {})
         @req.post("/1.1/statuses/destroy/#{id}.json", nil, options)
       end
 
@@ -15,7 +15,7 @@ module TwiRuby
       # @see https://dev.twitter.com/rest/reference/get/statuses/lookup
       # @param id [Array<Integer>, Array<String>]
       # @param options [Hash]
-      def lookup(id, options = {})
+      def status_lookup(id, options = {})
         options[:id] = id.join(",")
         @req.get("/1.1/statuses/lookup.json", options)
       end
@@ -69,7 +69,7 @@ module TwiRuby
       # @see https://dev.twitter.com/rest/reference/get/statuses/show/:id
       # @param id [Integer, String]
       # @param options [Hash]
-      def show_status(id, options = {})
+      def status_show(id, options = {})
         @req.get("/1.1/statuses/show/#{id}.json", options)
       end
 
