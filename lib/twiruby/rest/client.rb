@@ -3,6 +3,7 @@ require "twiruby/rest/account"
 require "twiruby/rest/request"
 require "twiruby/rest/timelines"
 require "twiruby/rest/tweets"
+require "twiruby/rest/users"
 
 module TwiRuby
   module REST
@@ -10,6 +11,7 @@ module TwiRuby
       include REST::Account
       include REST::Timelines
       include REST::Tweets
+      include REST::Users
 
       def initialize(options = {})
         super
