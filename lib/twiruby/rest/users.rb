@@ -21,8 +21,17 @@ module TwiRuby
       #
       # @see https://dev.twitter.com/rest/reference/get/users/search
       # @param options [Hash]
-      def search(options = {})
+      def search(q, options = {})
+        options[:q] = q
         @req.get("/1.1/users/search.json", options)
+      end
+
+      # Returns a map of the available size variations of the specified user’s profile banner.
+      #
+      # @see https://dev.twitter.com/rest/reference/get/users/profile_banner
+      # @param options [Hash]
+      def profile_banner(options = {})
+        @req.get("/1.1/users/profile_banner.json", options)
       end
 
       # Access to Twitter’s suggested user list.
@@ -44,10 +53,18 @@ module TwiRuby
 
       # Access the users in a given category of the Twitter suggested user list and return their most recent status if they are not a protected user.
       #
-      # @see https://dev.twitter.com/rest/reference/get/users/suggestions/%3Aslug/members
+      # @see https://dev.twitter.com/rest/reference/get/users/suggestions/:slug/members
       # @param slug [String]
       def suggestions_slug_members(slug)
         @req.get("/1.1/users/suggestions/#{slug}/members.json")
+      end
+
+      # Report the specified user as a spam account to Twitter.
+      #
+      # @see https://dev.twitter.com/rest/reference/post/users/report_spam
+      # @param options [Hash]
+      def report_spam(options)
+        @req.post("/1.1/users/report_spam.json", options)
       end
     end
   end
