@@ -1,5 +1,5 @@
-require "rexml/document"
 require "json"
+require "rexml/document"
 
 module TwiRuby
   class Error < StandardError

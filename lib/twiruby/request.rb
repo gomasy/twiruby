@@ -1,5 +1,5 @@
-require "net/https"
 require "erb"
+require "net/https"
 
 require "twiruby/utils"
 
@@ -21,8 +21,8 @@ module TwiRuby
     end
 
     def create_request(method, path, body = nil, options = {})
-      METHODS[method].new((!options.empty? ? "#{path}?#{options.to_q}" : path), {
-        "Authorization" => Headers.generate_header(@tokens, method, @url + path, body, options),
+      METHODS[method].new(path_with_options(path, options), {
+        "Authorization" => Headers.new(@tokens, method, @url + path, body, options).to_s,
         "User-Agent" => user_agent
       })
     end
@@ -38,6 +38,10 @@ module TwiRuby
 
     def post(path, body = nil, options = {}, &blk)
       request(create_request("POST", path, body.to_q, options), body.to_q, &blk)
+    end
+
+    def path_with_options(path, options)
+      !options.empty? ? %(#{path}?#{options.to_q}) : path
     end
 
     def user_agent

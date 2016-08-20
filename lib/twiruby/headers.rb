@@ -1,7 +1,7 @@
-require "securerandom"
-require "openssl"
 require "base64"
 require "erb"
+require "openssl"
+require "securerandom"
 require "uri"
 
 require "twiruby/utils"
@@ -9,9 +9,28 @@ require "twiruby/utils"
 include ERB::Util
 
 module TwiRuby
-  module Headers
+  class Headers
+    attr_reader :oauth_header, :oauth_nonce, :oauth_timestamp, :oauth_signature, :oauth_signature_base
+
     OAUTH_VERSION = "1.0"
     OAUTH_SIGNATURE_METHOD = "HMAC-SHA1"
+
+    def initialize(tokens, http_method, url, body = nil, options = {})
+      @oauth_nonce = SecureRandom.hex
+      @oauth_timestamp = Time.now.to_i
+      @oauth_signature_base = Headers.generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body, options)
+      @oauth_signature = Headers.generate_signature(tokens, oauth_signature_base)
+      @oauth_header = Headers.generate_parameters(tokens, oauth_nonce, oauth_timestamp, oauth_signature)
+    end
+
+    def to_s
+      str = "OAuth "
+      oauth_header.each do |k, v|
+        str << %(#{k}="#{url_encode(v)}", )
+      end
+
+      str[0..str.length - 3]
+    end
 
     class << self
       def generate_signature(tokens, oauth_signature_base)
@@ -26,19 +45,6 @@ module TwiRuby
         oauth_signature_base << url_encode("&#{body}") if !body.nil?
 
         oauth_signature_base
-      end
-
-      def generate_header(tokens, http_method, url, body = nil, options = {})
-        oauth_nonce = SecureRandom.hex
-        oauth_timestamp = Time.now.to_i
-        oauth_signature_base = generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body, options)
-
-        parameters = "OAuth "
-        generate_parameters(tokens, oauth_nonce, oauth_timestamp, generate_signature(tokens, oauth_signature_base)).each do |key, value|
-          parameters << %(#{key}="#{url_encode(value)}", )
-        end
-
-        parameters[0..parameters.length - 3]
       end
 
       def generate_parameters(tokens, oauth_nonce, oauth_timestamp, oauth_signature = nil, params = {})
