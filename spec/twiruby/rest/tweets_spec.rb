@@ -127,4 +127,16 @@ describe TwiRuby::REST::Tweets do
       expect(status[:text]).to eq "nullin it up"
     end
   end
+
+  describe "#update_with_media" do
+    before do
+      stub_post("/1.1/statuses/update_with_media.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
+    end
+
+    it "return a status" do
+      status = instance.update_with_media("nullin it up", :media => fixtures("3548635.jpg"))
+      expect(status).to be_a Hash
+      expect(status[:text]).to eq "nullin it up"
+    end
+  end
 end

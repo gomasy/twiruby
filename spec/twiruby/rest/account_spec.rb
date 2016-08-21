@@ -50,4 +50,16 @@ describe TwiRuby::REST::Account do
       expect(user[:screen_name]).to eq "theSeanCook"
     end
   end
+
+  describe "#update_profile_image" do
+    before do
+      stub_post("/1.1/account/update_profile_image.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
+    end
+
+    it "return an authenticated user" do
+      user = instance.update_profile_image(:image => fixtures("3548635.jpg"))
+      expect(user).to be_a Hash
+      expect(user[:screen_name]).to eq "null"
+    end
+  end
 end
