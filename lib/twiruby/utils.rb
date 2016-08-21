@@ -1,13 +1,12 @@
 class Hash
   def to_q
-    if !self.nil?
-      str = ""
-      self.each do |key, value|
-        str << "#{key}=#{url_encode(value)}&"
-      end
-
-      str[0..str.length - 2]
+    str = ""
+    self.each do |k, v|
+      v = v.join(",") if v.kind_of?(Array)
+      str << "#{k}=#{url_encode(v)}&"
     end
+
+    str[0..str.length - 2]
   end
 
   def symbolize_keys

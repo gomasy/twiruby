@@ -16,7 +16,7 @@ module TwiRuby
       # @param id [Array<Integer>, Array<String>]
       # @param options [Hash]
       def status_lookup(id, options = {})
-        options[:id] = id.join(",")
+        options[:id] = id
         @req.get("/1.1/statuses/lookup.json", options)
       end
 
