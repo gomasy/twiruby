@@ -81,6 +81,17 @@ module TwiRuby
       def update(status, options = {})
         @req.post("/1.1/statuses/update.json", { :status => status }, options)
       end
+
+      # [DEPRECATED] Updates the authenticating user’s current status and attaches media for upload. In other words, it creates a Tweet with a picture attached.
+      #
+      # @see https://dev.twitter.com/rest/reference/post/statuses/update_with_media
+      # @param status [Integer, String]
+      # @param media [Hash]
+      # @param options [Hash]
+      def update_with_media(status, media, options = {})
+        media["status"] = status
+        @req.multipart_post("/1.1/statuses/update_with_media.json", media, options)
+      end
     end
   end
 end

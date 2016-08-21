@@ -1,16 +1,12 @@
 require "erb"
-require "net/https"
+require "net/http"
+require "net/http/post/multipart"
 
 require "twiruby/utils"
 
 module TwiRuby
   class Request
     attr_writer :user_agent
-
-    METHODS = {
-      "GET" => Net::HTTP::Get,
-      "POST" => Net::HTTP::Post
-    }
 
     def initialize(tokens, url)
       @tokens, @url = tokens, url
@@ -20,24 +16,37 @@ module TwiRuby
       @https.verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
 
-    def create_request(method, path, body = nil, options = {})
-      METHODS[method].new(path_with_options(path, options), {
-        "Authorization" => Headers.new(@tokens, method, @url + path, body, options).to_s,
-        "User-Agent" => user_agent
-      })
+    def create_request(request, path, file = nil, options = {})
+      if file.nil?
+        request.new(path_with_options(path, options))
+      else
+        request.new(path_with_options(path, options), file)
+      end
     end
 
-    def request(req, body = nil, &blk)
+    def request(request, path, body = nil, file = nil, options = {}, &blk)
+      req = create_request(request, path, file, options)
+      req["Authorization"] = Headers.new(@tokens, req.method, @url + path, body, options).to_s
+      req["User-Agent"] = user_agent
+
+      get_response(req, body, &blk)
+    end
+
+    def get_response(req, body = nil, &blk)
       res = @https.request(req, body)
       res.code == "200" ? res : fail(Error.type(res.code), Error.parse_error(res.body))
     end
 
     def get(path, options = {}, &blk)
-      request(create_request("GET", path, nil, options), nil, &blk)
+      request(Net::HTTP::Get, path, nil, nil, options, &blk)
     end
 
     def post(path, body = nil, options = {}, &blk)
-      request(create_request("POST", path, body.to_q, options), body.to_q, &blk)
+      request(Net::HTTP::Post, path, body.to_q, nil, options, &blk)
+    end
+
+    def multipart_post(path, file = nil, options = {}, &blk)
+      request(Net::HTTP::Post::Multipart, path, nil, file, options, &blk)
     end
 
     def path_with_options(path, options)

@@ -31,6 +31,15 @@ module TwiRuby
       def update_profile(options = {})
         @req.post("/1.1/account/update_profile.json", nil, options)
       end
+
+      # Updates the authenticating user’s profile image. Note that this method expects raw multipart data, not a URL to an image.
+      #
+      # @see https://dev.twitter.com/rest/reference/post/account/update_profile_image
+      # @param image [Hash]
+      # @param options [Hash]
+      def update_profile_image(image, options = {})
+        @req.multipart_post("/1.1/account/update_profile_image.json", image, options)
+      end
     end
   end
 end

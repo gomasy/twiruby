@@ -10,7 +10,7 @@ module TwiRuby
     SITE_BASE_URL = URI.parse("https://sitestream.twitter.com")
 
     class Request < TwiRuby::Request
-      def request(req, body = nil, &blk)
+      def get_response(req, body = nil, &blk)
         req["Accept-Encoding"] = "identity"
 
         @https.request(req) do |res|

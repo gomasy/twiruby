@@ -13,13 +13,13 @@ describe TwiRuby::REST::Request do
     end
   end
 
-  describe "#request" do
+  describe "#get_response" do
     before do
       stub_get("/1.1/help/tos.json").to_return(:status => 200, :body => json)
     end
 
     it "return a parsed json" do
-      result = instance.request(Net::HTTP::Get.new("/1.1/help/tos.json"))
+      result = instance.get_response(Net::HTTP::Get.new("/1.1/help/tos.json"))
       expect(result).to be_a Hash
       expect(result).to eq parsed_json
     end
