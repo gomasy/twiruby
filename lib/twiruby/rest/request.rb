@@ -12,7 +12,7 @@ module TwiRuby
         super
       end
 
-      def get_response(req, body = nil)
+      def get_response(req, body = nil, &blk)
         res = @https.request(req, body)
         res.code == "200" ? JSON.parse(res.body, symbolize_names: true) :
           fail(Error.type(res.code), Error.parse_error(res.body))
