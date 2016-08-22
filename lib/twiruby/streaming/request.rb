@@ -1,5 +1,4 @@
 require "json"
-require "ostruct"
 require "uri"
 
 require "twiruby/request"
@@ -22,7 +21,7 @@ module TwiRuby
             buffer << chunk.chomp
             if chunk.end_with?("\r\n")
               begin
-                blk.call(OpenStruct.new(JSON.parse(buffer, symbolize_names: true)))
+                blk.call(JSON.parse(buffer, symbolize_names: true))
               rescue JSON::ParserError
                 # crush
               ensure
