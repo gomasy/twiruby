@@ -134,7 +134,7 @@ describe TwiRuby::REST::Tweets do
     end
 
     it "return a status" do
-      status = instance.update_with_media("nullin it up", :media => fixtures("3548635.jpg"))
+      status = instance.update_with_media("nullin it up", fixtures("3548635.jpg"))
       expect(status).to be_a Hash
       expect(status[:text]).to eq "nullin it up"
     end

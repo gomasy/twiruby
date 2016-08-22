@@ -57,7 +57,7 @@ describe TwiRuby::REST::Account do
     end
 
     it "return an authenticated user" do
-      user = instance.update_profile_image(:image => fixtures("3548635.jpg"))
+      user = instance.update_profile_image(fixtures("3548635.jpg"))
       expect(user).to be_a Hash
       expect(user[:screen_name]).to eq "null"
     end
