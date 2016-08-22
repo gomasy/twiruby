@@ -62,4 +62,24 @@ describe TwiRuby::REST::Account do
       expect(user[:screen_name]).to eq "null"
     end
   end
+
+  describe "#remove_profile_banner" do
+    before do
+      stub_post("/1.1/account/remove_profile_banner.json").to_return(:status => 200, :body => "{}")
+    end
+
+    it "return an empty response" do
+      expect(instance.remove_profile_banner).to be_a Hash
+    end
+  end
+
+  describe "#update_profile_banner" do
+    before do
+      stub_post("/1.1/account/update_profile_banner.json").to_return(:status => 200, :body => "{}")
+    end
+
+    it "return an empty response" do
+      expect(instance.update_profile_banner(fixtures("3548635.jpg"))).to be_a Hash
+    end
+  end
 end
