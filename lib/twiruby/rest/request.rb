@@ -1,4 +1,5 @@
 require "json"
+require "ostruct"
 require "uri"
 
 require "twiruby/request"
@@ -14,7 +15,7 @@ module TwiRuby
 
       def get_response(req, body = nil, &blk)
         res = @https.request(req, body)
-        res.code == "200" ? JSON.parse(res.body, symbolize_names: true) :
+        res.code == "200" ? OpenStruct.new(JSON.parse(res.body, symbolize_names: true)) :
           fail(Error.type(res.code), Error.parse_error(res.body))
       end
     end
