@@ -35,10 +35,26 @@ module TwiRuby
       # Updates the authenticating user’s profile image. Note that this method expects raw multipart data, not a URL to an image.
       #
       # @see https://dev.twitter.com/rest/reference/post/account/update_profile_image
-      # @param image [Hash]
+      # @param image [String]
       # @param options [Hash]
       def update_profile_image(image, options = {})
-        @req.multipart_post("/1.1/account/update_profile_image.json", image, options)
+        @req.multipart_post("/1.1/account/update_profile_image.json", { :image => image }, options)
+      end
+
+      # Removes the uploaded profile banner for the authenticating user.
+      #
+      # @see https://dev.twitter.com/rest/reference/post/account/remove_profile_banner
+      def remove_profile_banner
+        @req.post("/1.1/account/remove_profile_banner.json")
+      end
+
+      # Uploads a profile banner on behalf of the authenticating user.
+      #
+      # @see https://dev.twitter.com/rest/reference/post/account/update_profile_banner
+      # @param banner [String]
+      # @param options [Hash]
+      def update_profile_banner(banner, options = {})
+        @req.multipart_post("/1.1/account/update_profile_banner.json", { :banner => banner }, options)
       end
     end
   end

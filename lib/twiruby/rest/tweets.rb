@@ -86,11 +86,14 @@ module TwiRuby
       #
       # @see https://dev.twitter.com/rest/reference/post/statuses/update_with_media
       # @param status [Integer, String]
-      # @param media [Hash]
+      # @param media [String]
       # @param options [Hash]
       def update_with_media(status, media, options = {})
-        media["status"] = status
-        @req.multipart_post("/1.1/statuses/update_with_media.json", media, options)
+        @req.multipart_post(
+          "/1.1/statuses/update_with_media.json", {
+            :status => status,
+            "media[]" => media
+          }, options)
       end
     end
   end

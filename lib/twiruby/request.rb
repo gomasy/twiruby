@@ -34,7 +34,7 @@ module TwiRuby
 
     def get_response(req, body = nil, &blk)
       res = @https.request(req, body)
-      res.code == "200" ? res : fail(Error.type(res.code), Error.parse_error(res.body))
+      res.code =~ /20\d/ ? res : fail(Error.type(res.code), Error.parse_error(res.body))
     end
 
     def get(path, options = {}, &blk)
