@@ -93,7 +93,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#retweeters" do
     before do
-      stub_get("/1.1/statuses/retweeters/ids.json?id=20303971").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("retweeters.json"))
+      stub_get("/1.1/statuses/retweeters/ids.json?id=20303971").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("users_ids.json"))
     end
 
     it "returns an array of ids" do

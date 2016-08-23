@@ -29,25 +29,25 @@ describe TwiRuby::REST::Account do
 
   describe "#verify_credentials" do
     before do
-      stub_get("/1.1/account/verify_credentials.json").to_return(:status => 200, :body => fixtures("profile.json"))
+      stub_get("/1.1/account/verify_credentials.json").to_return(:status => 200, :body => fixtures("user.json"))
     end
 
     it "return an authenticated user" do
       user = instance.verify_credentials
       expect(user).to be_a Hash
-      expect(user[:screen_name]).to eq "theSeanCook"
+      expect(user[:screen_name]).to eq "null"
     end
   end
 
   describe "#update_profile" do
     before do
-      stub_post("/1.1/account/update_profile.json?screen_name=theSeanCook").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("profile.json"))
+      stub_post("/1.1/account/update_profile.json?screen_name=null").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
     end
 
     it "return an authenticated user" do
-      user = instance.update_profile(:screen_name => "theSeanCook")
+      user = instance.update_profile(:screen_name => "null")
       expect(user).to be_a Hash
-      expect(user[:screen_name]).to eq "theSeanCook"
+      expect(user[:screen_name]).to eq "null"
     end
   end
 
