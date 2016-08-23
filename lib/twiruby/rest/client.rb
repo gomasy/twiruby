@@ -2,6 +2,7 @@ require "twiruby/client"
 require "twiruby/rest/account"
 require "twiruby/rest/blocks"
 require "twiruby/rest/favorites"
+require "twiruby/rest/mutes"
 require "twiruby/rest/request"
 require "twiruby/rest/timelines"
 require "twiruby/rest/tweets"
@@ -13,6 +14,7 @@ module TwiRuby
       include REST::Account
       include REST::Blocks
       include REST::Favorites
+      include REST::Mutes
       include REST::Timelines
       include REST::Tweets
       include REST::Users
