@@ -1,5 +1,3 @@
-require "twiruby"
-
 module TwiRuby
   module REST
     module Blocks
