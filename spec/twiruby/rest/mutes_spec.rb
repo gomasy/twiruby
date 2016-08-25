@@ -5,7 +5,7 @@ describe TwiRuby::REST::Mutes do
 
   describe "#mutes_create" do
     before do
-      stub_post("/1.1/mutes/users/create.json?user_id=3562471").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
+      stub_post("/1.1/mutes/users/create.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("user.json"))
     end
 
     it "return a muted user" do
@@ -17,7 +17,7 @@ describe TwiRuby::REST::Mutes do
 
   describe "#mutes_destroy" do
     before do
-      stub_post("/1.1/mutes/users/destroy.json?user_id=3562471").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
+      stub_post("/1.1/mutes/users/destroy.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("user.json"))
     end
 
     it "return a muted user" do

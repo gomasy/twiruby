@@ -16,7 +16,7 @@ module TwiRuby
       # @param options [Hash]
       def favorites_destroy(id, options = {})
         options[:id] = id
-        @req.post("/1.1/favorites/destroy.json", nil, options)
+        @req.post("/1.1/favorites/destroy.json", options)
       end
 
       # Likes the status specified in the ID parameter as the authenticating user.
@@ -26,7 +26,7 @@ module TwiRuby
       # @param options [Hash]
       def favorites_create(id, options = {})
         options[:id] = id
-        @req.post("/1.1/favorites/create.json", nil, options)
+        @req.post("/1.1/favorites/create.json", options)
       end
     end
   end

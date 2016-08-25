@@ -31,7 +31,7 @@ describe TwiRuby::REST::Blocks do
 
   describe "#blocks_create" do
     before do
-      stub_post("/1.1/blocks/create.json?user_id=3562471").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
+      stub_post("/1.1/blocks/create.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("user.json"))
     end
 
     it "return a blocked user" do
@@ -43,7 +43,7 @@ describe TwiRuby::REST::Blocks do
 
   describe "#blocks_destroy" do
     before do
-      stub_post("/1.1/blocks/destroy.json?user_id=3562471").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
+      stub_post("/1.1/blocks/destroy.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("user.json"))
     end
 
     it "return a unblocked user" do

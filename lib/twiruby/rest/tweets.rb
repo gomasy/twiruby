@@ -7,7 +7,7 @@ module TwiRuby
       # @param id [Integer, String]
       # @param options [Hash]
       def status_destroy(id, options = {})
-        @req.post("/1.1/statuses/destroy/#{id}.json", nil, options)
+        @req.post("/1.1/statuses/destroy/#{id}.json", options)
       end
 
       # Returns fully-hydrated tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter.
@@ -34,7 +34,7 @@ module TwiRuby
       # @param id [Integer, String]
       # @param options [Hash]
       def retweet(id, options = {})
-        @req.post("/1.1/statuses/retweet/#{id}.json", nil, options)
+        @req.post("/1.1/statuses/retweet/#{id}.json", options)
       end
 
       # Returns the original Tweet with retweet details embedded.
@@ -43,7 +43,7 @@ module TwiRuby
       # @param id [Integer, String]
       # @param options [Hash]
       def unretweet(id, options = {})
-        @req.post("/1.1/statuses/unretweet/#{id}.json", nil, options)
+        @req.post("/1.1/statuses/unretweet/#{id}.json", options)
       end
 
       # Returns a collection of the 100 most recent retweets of the tweet specified by the id parameter.

@@ -6,7 +6,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#status_destroy" do
     before do
-      stub_post("/1.1/statuses/destroy/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
+      stub_post("/1.1/statuses/destroy/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("status.json"))
     end
 
     it "return a destroyed status" do
@@ -19,7 +19,7 @@ describe TwiRuby::REST::Tweets do
   describe "#status_lookup" do
     before do
       @id = [20303971,20304451,275824752692707328,350499641130889218]
-      stub_get("/1.1/statuses/lookup.json?id=#{@id.join(",")}").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("statuses.json"))
+      stub_get("/1.1/statuses/lookup.json?id=#{@id.join(",")}").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("statuses.json"))
     end
 
     it "returns an array of statuses" do
@@ -32,7 +32,7 @@ describe TwiRuby::REST::Tweets do
   describe "#oembed" do
     context "with a id" do
       before do
-        stub_get("/1.1/statuses/oembed.json?id=20303971").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("oembed.json"))
+        stub_get("/1.1/statuses/oembed.json?id=20303971").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("oembed.json"))
       end
 
       it "return a status" do
@@ -44,7 +44,7 @@ describe TwiRuby::REST::Tweets do
 
     context "with a url" do
       before do
-        stub_get("/1.1/statuses/oembed.json?url=https://twitter.com/null/status/20303971").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("oembed.json"))
+        stub_get("/1.1/statuses/oembed.json?url=https://twitter.com/null/status/20303971").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("oembed.json"))
       end
 
       it "return a status" do
@@ -57,7 +57,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#retweet" do
     before do
-      stub_post("/1.1/statuses/retweet/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("retweet.json"))
+      stub_post("/1.1/statuses/retweet/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("retweet.json"))
     end
 
     it "return a retweeted status" do
@@ -69,7 +69,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#unretweet" do
     before do
-      stub_post("/1.1/statuses/unretweet/551893403395313664.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
+      stub_post("/1.1/statuses/unretweet/551893403395313664.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("status.json"))
     end
 
     it "return an original status" do
@@ -81,7 +81,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#retweets" do
     before do
-      stub_get("/1.1/statuses/retweets/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("retweets.json"))
+      stub_get("/1.1/statuses/retweets/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("retweets.json"))
     end
 
     it "returns an array of retweeted statuses" do
@@ -93,7 +93,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#retweeters" do
     before do
-      stub_get("/1.1/statuses/retweeters/ids.json?id=20303971").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("users_ids.json"))
+      stub_get("/1.1/statuses/retweeters/ids.json?id=20303971").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("users_ids.json"))
     end
 
     it "returns an array of ids" do
@@ -106,7 +106,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#status_show" do
     before do
-      stub_get("/1.1/statuses/show/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
+      stub_get("/1.1/statuses/show/20303971.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("status.json"))
     end
 
     it "return a status" do
@@ -118,7 +118,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#update" do
     before do
-      stub_post("/1.1/statuses/update.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
+      stub_post("/1.1/statuses/update.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("status.json"))
     end
 
     it "return a status" do
@@ -130,7 +130,7 @@ describe TwiRuby::REST::Tweets do
 
   describe "#update_with_media" do
     before do
-      stub_post("/1.1/statuses/update_with_media.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("status.json"))
+      stub_post("/1.1/statuses/update_with_media.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("status.json"))
     end
 
     it "return a status" do

@@ -14,7 +14,7 @@ module TwiRuby
     # @see https://dev.twitter.com/oauth/reference/post/oauth/request_token
     # @param options [Hash]
     def get_request_token(options = {})
-      res = request.post("/oauth/request_token", nil, options)
+      res = request.post("/oauth/request_token", {}, options)
       token = Hash[URI::decode_www_form(res.body)]
       token[:authorize_url] = "#{REST::BASE_URL}/oauth/authorize?#{res.body}"
 
@@ -30,7 +30,7 @@ module TwiRuby
       @oauth_token = request_token[:oauth_token]
       @oauth_token_secret = request_token[:oauth_token_secret]
 
-      res = request.post("/oauth/access_token", nil, options)
+      res = request.post("/oauth/access_token", {}, options)
       tokens.update(Hash[URI::decode_www_form(res.body)]).symbolize_keys
     end
   end

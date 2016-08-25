@@ -95,7 +95,7 @@ describe TwiRuby::REST::Users do
 
   describe "#report_spam" do
     before do
-      stub_post("/1.1/users/report_spam.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
+      stub_post("/1.1/users/report_spam.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("user.json"))
     end
 
     it "should return a user" do

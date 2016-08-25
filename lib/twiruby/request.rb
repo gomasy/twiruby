@@ -16,20 +16,17 @@ module TwiRuby
       @https.verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
 
-    def create_request(request, path, file = nil, options = {})
-      if file.nil?
-        request.new(path_with_options(path, options))
-      else
+    def create_request(request, path, file = {}, options = {})
+      file.empty? ? request.new(path_with_options(path, options)) :
         request.new(path_with_options(path, options), file)
-      end
     end
 
-    def request(request, path, body = nil, file = nil, options = {}, &blk)
+    def request(request, path, body = {}, file = {}, options = {}, &blk)
       req = create_request(request, path, file, options)
-      req["Authorization"] = Headers.new(@tokens, req.method, @url + path, body, options).to_s
+      req["Authorization"] = Headers.new(@tokens, req.method, @url + path, options.update(body)).to_s
       req["User-Agent"] = user_agent
 
-      get_response(req, body, &blk)
+      get_response(req, body.to_q, &blk)
     end
 
     def get_response(req, body = nil, &blk)
@@ -38,18 +35,18 @@ module TwiRuby
     end
 
     def get(path, options = {}, &blk)
-      request(Net::HTTP::Get, path, nil, nil, options, &blk)
+      request(Net::HTTP::Get, path, {}, {}, options, &blk)
     end
 
-    def post(path, body = nil, options = {}, &blk)
-      request(Net::HTTP::Post, path, body.to_q, nil, options, &blk)
+    def post(path, body = {}, options = {}, &blk)
+      request(Net::HTTP::Post, path, body, {}, options, &blk)
     end
 
-    def multipart_post(path, file = nil, options = {}, &blk)
-      request(Net::HTTP::Post::Multipart, path, nil, file, options, &blk)
+    def multipart_post(path, file = {}, options = {}, &blk)
+      request(Net::HTTP::Post::Multipart, path, {}, file, options, &blk)
     end
 
-    def path_with_options(path, options)
+    def path_with_options(path, options = {})
       !options.empty? ? %(#{path}?#{options.to_q}) : path
     end
 

@@ -15,10 +15,10 @@ module TwiRuby
     OAUTH_VERSION = "1.0"
     OAUTH_SIGNATURE_METHOD = "HMAC-SHA1"
 
-    def initialize(tokens, http_method, url, body = nil, options = {})
+    def initialize(tokens, http_method, url, params = {})
       @oauth_nonce = SecureRandom.hex
       @oauth_timestamp = Time.now.to_i
-      @oauth_signature_base = Headers.generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body, options)
+      @oauth_signature_base = Headers.generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, params)
       @oauth_signature = Headers.generate_signature(tokens, oauth_signature_base)
       @oauth_header = Headers.generate_parameters(tokens, oauth_nonce, oauth_timestamp, oauth_signature)
     end
@@ -38,11 +38,9 @@ module TwiRuby
         Base64.encode64(OpenSSL::HMAC.digest("sha1", sign_key, oauth_signature_base)).chomp
       end
 
-      def generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, body = nil, options = {})
-        query = generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, options).to_q
-
+      def generate_signature_base(tokens, http_method, url, oauth_nonce, oauth_timestamp, params = {})
+        query = generate_parameters(tokens, oauth_nonce, oauth_timestamp, nil, params).to_q
         oauth_signature_base = %(#{http_method}&#{url_encode(url)}&#{url_encode(query)})
-        oauth_signature_base << url_encode("&#{body}") if !body.nil?
 
         oauth_signature_base
       end

@@ -6,7 +6,7 @@ module TwiRuby
       # @see https://dev.twitter.com/rest/reference/post/mutes/users/create
       # @param options [Hash]
       def mutes_create(options = {})
-        @req.post("/1.1/mutes/users/create.json", nil, options)
+        @req.post("/1.1/mutes/users/create.json", options)
       end
 
       # Un-mutes the user specified in the ID parameter for the authenticating user.
@@ -14,7 +14,7 @@ module TwiRuby
       # @see https://dev.twitter.com/rest/reference/post/mutes/users/destroy
       # @param options [Hash]
       def mutes_destroy(options = {})
-        @req.post("/1.1/mutes/users/destroy.json", nil, options)
+        @req.post("/1.1/mutes/users/destroy.json", options)
       end
 
       # Returns an array of numeric user ids the authenticating user has muted.

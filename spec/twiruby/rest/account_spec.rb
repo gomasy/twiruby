@@ -17,7 +17,7 @@ describe TwiRuby::REST::Account do
 
   describe "#update_settings" do
     before do
-      stub_post("/1.1/account/settings.json?screen_name=theSeanCook").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("account.json"))
+      stub_post("/1.1/account/settings.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("account.json"))
     end
 
     it "return an account" do
@@ -41,7 +41,7 @@ describe TwiRuby::REST::Account do
 
   describe "#update_profile" do
     before do
-      stub_post("/1.1/account/update_profile.json?screen_name=null").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
+      stub_post("/1.1/account/update_profile.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("user.json"))
     end
 
     it "return an authenticated user" do
@@ -53,7 +53,7 @@ describe TwiRuby::REST::Account do
 
   describe "#update_profile_image" do
     before do
-      stub_post("/1.1/account/update_profile_image.json").to_return(:status => 200, :headers => { "content-type" => "application/json;utf-8" }, :body => fixtures("user.json"))
+      stub_post("/1.1/account/update_profile_image.json").to_return(:status => 200, :headers => { "content-type" => "application/json;charset=utf-8" }, :body => fixtures("user.json"))
     end
 
     it "return an authenticated user" do
