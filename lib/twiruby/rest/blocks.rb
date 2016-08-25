@@ -21,7 +21,7 @@ module TwiRuby
       #
       # @see https://dev.twitter.com/rest/reference/post/blocks/create
       # @param options [Hash]
-      def blocks_create(options = {})
+      def block(options = {})
         @req.post("/1.1/blocks/create.json", options)
       end
 
@@ -29,7 +29,7 @@ module TwiRuby
       #
       # @see https://dev.twitter.com/rest/reference/post/blocks/destroy
       # @param options [Hash]
-      def blocks_destroy(options = {})
+      def unblock(options = {})
         @req.post("/1.1/blocks/destroy.json", options)
       end
     end

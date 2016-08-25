@@ -14,7 +14,7 @@ module TwiRuby
       # @see https://dev.twitter.com/rest/reference/post/favorites/destroy
       # @param id [Integer, String]
       # @param options [Hash]
-      def favorites_destroy(id, options = {})
+      def unfavorite(id, options = {})
         options[:id] = id
         @req.post("/1.1/favorites/destroy.json", options)
       end
@@ -24,7 +24,7 @@ module TwiRuby
       # @see https://dev.twitter.com/rest/reference/post/favorites/create
       # @param id [Integer, String]
       # @param options [Hash]
-      def favorites_create(id, options = {})
+      def favorite(id, options = {})
         options[:id] = id
         @req.post("/1.1/favorites/create.json", options)
       end

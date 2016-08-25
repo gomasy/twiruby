@@ -5,7 +5,7 @@ module TwiRuby
       #
       # @see https://dev.twitter.com/rest/reference/post/mutes/users/create
       # @param options [Hash]
-      def mutes_create(options = {})
+      def mute(options = {})
         @req.post("/1.1/mutes/users/create.json", options)
       end
 
@@ -13,7 +13,7 @@ module TwiRuby
       #
       # @see https://dev.twitter.com/rest/reference/post/mutes/users/destroy
       # @param options [Hash]
-      def mutes_destroy(options = {})
+      def unmute(options = {})
         @req.post("/1.1/mutes/users/destroy.json", options)
       end
 
