@@ -3,6 +3,10 @@ require "twiruby/rest/account"
 require "twiruby/rest/blocks"
 require "twiruby/rest/direct_messages"
 require "twiruby/rest/favorites"
+require "twiruby/rest/followers"
+require "twiruby/rest/friends"
+require "twiruby/rest/friendships"
+require "twiruby/rest/lists"
 require "twiruby/rest/mutes"
 require "twiruby/rest/request"
 require "twiruby/rest/search"
@@ -17,6 +21,10 @@ module TwiRuby
       include REST::Blocks
       include REST::DirectMessages
       include REST::Favorites
+      include REST::Followers
+      include REST::Friends
+      include REST::Friendships
+      include REST::Lists
       include REST::Mutes
       include REST::Search
       include REST::Timelines
