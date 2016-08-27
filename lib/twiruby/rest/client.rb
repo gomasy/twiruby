@@ -1,9 +1,11 @@
 require "twiruby/client"
 require "twiruby/rest/account"
 require "twiruby/rest/blocks"
+require "twiruby/rest/direct_messages"
 require "twiruby/rest/favorites"
 require "twiruby/rest/mutes"
 require "twiruby/rest/request"
+require "twiruby/rest/search"
 require "twiruby/rest/timelines"
 require "twiruby/rest/tweets"
 require "twiruby/rest/users"
@@ -13,8 +15,10 @@ module TwiRuby
     class Client < TwiRuby::Client
       include REST::Account
       include REST::Blocks
+      include REST::DirectMessages
       include REST::Favorites
       include REST::Mutes
+      include REST::Search
       include REST::Timelines
       include REST::Tweets
       include REST::Users
